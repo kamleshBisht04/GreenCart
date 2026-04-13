@@ -4,15 +4,29 @@ import { useNavigate } from "react-router-dom";
 
 export const AppContext = createContext();
 
-export const AppContextProvider = ({ Children }) => {
-  const navigate = useNavigate();
+export const AppContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isSeller, setIsSeller] = useState(false);
+  const [showUserLogIn, SetShowUserLogIn] = useState(false);
+  const navigate = useNavigate();
 
-  const value = { navigate, user, setUser, isSeller, setIsSeller };
-  return <AppContext.Provider value={value}>{Children}</AppContext.Provider>;
+  const value = {
+    user,
+    setUser,
+    navigate,
+    isSeller,
+    setIsSeller,
+    showUserLogIn,
+    SetShowUserLogIn,
+  };
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 
-export const useAppConstext = () => {
-  return useContext(AppContext);
+export const useAppContext = () => {
+  const context = useContext(AppContext);
+
+  if (!context) {
+    throw new Error("useAppContext must be used within AppProvider");
+  }
+  return context;
 };
