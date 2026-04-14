@@ -1,4 +1,5 @@
 import BestSeller from "../components/BestSeller";
+import BootomBanner from "../components/BootomBanner";
 import Categories from "../components/Categories";
 import MainBanner from "../components/MainBanner";
 
@@ -8,6 +9,7 @@ const Home = () => {
       <MainBanner />
       <Categories/>
       <BestSeller/>
+      <BootomBanner/>
     </div>
   );
 };
