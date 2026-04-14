@@ -1,4 +1,3 @@
-import { categories } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
 
 const ProductCard = ({ product }) => {
