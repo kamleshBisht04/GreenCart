@@ -10,3 +10,9 @@
   --color-primary: #4fbf8b;
   --color-primary-dull: #44ae7c;
 }
+
+@layer components {
+  button {
+    @apply cursor-pointer;
+  }
+}

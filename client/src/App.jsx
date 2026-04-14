@@ -3,12 +3,13 @@ import Navbar from "./layout/Navbar";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import Contact from "./pages/Contact";
-
+import {Toaster} from "react-hot-toast";
 const App = () => {
   const isSellerPath = useLocation().pathname.includes("seller");
   return (
     <div>
       {!isSellerPath && <Navbar />}
+      <Toaster/>
       <div
         className={`${isSellerPath ? "" : "px-6 md:px-16 lg:px-24 xl:px-32"}`}
       >
