@@ -1,4 +1,5 @@
 import { useAppContext } from "../context/AppContext";
+import { FaCartPlus } from "react-icons/fa";
 
 const ProductCard = ({ product }) => {
   const { addToCart, removeFromCart, getItemQuantity, currency } =
@@ -39,7 +40,10 @@ const ProductCard = ({ product }) => {
             onClick={() => addToCart(product._id)}
             className="absolute right-1 bottom-1 rounded-md bg-green-600 px-3 py-1 text-xs font-semibold text-white shadow-md transition hover:bg-green-700 active:scale-95"
           >
-            + Add
+            <span className="flex items-center justify-center gap-1">
+              <FaCartPlus className="inline-block" />
+              Add
+            </span>
           </button>
         ) : (
           <div className="absolute right-1 bottom-1 flex items-center gap-2 rounded-md bg-green-600 px-2 py-1 text-white shadow-md">
