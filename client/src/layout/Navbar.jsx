@@ -12,7 +12,9 @@ const Navbar = () => {
     navigate,
     setSearchQuery,
     searchQuery,
+    getTotalItems,
   } = useAppContext();
+  const totalItems = getTotalItems();
 
   const logout = async () => {
     setUser(null);
@@ -54,9 +56,11 @@ const Navbar = () => {
             alt="shopping Cart "
             className="w-6 opacity-80"
           />
-          <button className="bg-primary absolute -top-2 -right-3 h-[18px] w-[18px] rounded-full text-xs text-white">
-            3
-          </button>
+          {totalItems > 0 && (
+            <button className="bg-primary absolute -top-2 -right-3 h-[18px] w-[18px] rounded-full text-xs text-white">
+              {totalItems}
+            </button>
+          )}
         </div>
 
         {!user ? (

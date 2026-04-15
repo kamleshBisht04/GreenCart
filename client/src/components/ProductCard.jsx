@@ -44,7 +44,10 @@ const ProductCard = ({ product }) => {
         {/* ADD BUTTON */}
         {qty === 0 ? (
           <button
-            onClick={() => addToCart(product._id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              addToCart(product._id);
+            }}
             className="absolute right-1 bottom-1 rounded-md bg-green-600 px-3 py-1 text-xs font-semibold text-white shadow-md transition hover:bg-green-700 active:scale-95"
           >
             <span className="flex items-center justify-center gap-1">
@@ -54,11 +57,25 @@ const ProductCard = ({ product }) => {
           </button>
         ) : (
           <div className="absolute right-1 bottom-1 flex items-center gap-2 rounded-md bg-green-600 px-2 py-1 text-white shadow-md">
-            <button onClick={() => removeFromCart(product._id)}>−</button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                removeFromCart(product._id);
+              }}
+            >
+              −
+            </button>
 
             <span className="w-4 text-center text-xs font-semibold">{qty}</span>
 
-            <button onClick={() => addToCart(product._id)}>+</button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                addToCart(product._id);
+              }}
+            >
+              +
+            </button>
           </div>
         )}
       </div>

@@ -3,6 +3,7 @@ import { useAppContext } from "../context/AppContext.jsx";
 import { Link, useParams } from "react-router-dom";
 import { assets } from "../assets/assets.js";
 import ProductCard from "../components/ProductCard";
+import Breadcrumb from "../components/Breadcrumb .jsx";
 
 const ProductDetails = () => {
   const { products, navigate, currency, addToCart } = useAppContext();
@@ -32,26 +33,12 @@ const ProductDetails = () => {
   return (
     <div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6 lg:px-8">
       {/* 🔗 Breadcrumb */}
-      <p className="flex flex-wrap gap-1 text-sm text-gray-500">
-        <Link to="/" className="hover:text-primary">
-          Home
-        </Link>
-        /
-        <Link to="/products" className="hover:text-primary">
-          Products
-        </Link>
-        /
-        <Link
-          to={`/products/${product.category.toLowerCase()}`}
-          className="hover:text-primary"
-        >
-          {product.category}
-        </Link>
-        /<span className="text-primary-dull">{product.name}</span>
-      </p>
+      <span className="flex flex-wrap gap-1 text-sm text-gray-500 ">
+        <Breadcrumb product={product} />
+      </span>
 
       {/*  Main Section */}
-      <div className="mt-6 grid gap-10 md:grid-cols-2">
+      <div className="mt-10 grid gap-10 md:grid-cols-2">
         {/* 🖼 Images */}
         <div className="flex flex-col-reverse gap-4 sm:flex-row">
           {/* Thumbnails */}
