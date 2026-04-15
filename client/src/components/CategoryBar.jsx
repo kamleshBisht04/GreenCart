@@ -10,9 +10,9 @@ const CategoryBar = () => {
     <div className="w-full border-b bg-white">
       <div className="mx-auto max-w-[100rem] px-4 py-3">
         <div className="scrollbar-hide flex justify-center gap-7 overflow-x-auto scroll-smooth">
-          {categories.map((cat) => (
+          {categories.map((cat, index) => (
             <div
-              key={cat.path}
+              key={index}
               onClick={() => {
                 setActive(cat.path);
                 navigate(`/products/${cat.path.toLowerCase()}`);
@@ -23,7 +23,7 @@ const CategoryBar = () => {
               {/* IMAGE (BIG + CLEAN) */}
               <div className="flex flex-col items-center justify-center">
                 <div
-                  className="flex h-16 w-16 items-center justify-center rounded-2xl transition duration-200 group-hover:scale-105 border border-gray-100 p-1"
+                  className="flex h-16 w-16 items-center justify-center rounded-2xl border border-gray-100 p-1 transition duration-200 group-hover:scale-105"
                   // style={{ backgroundColor: cat.bgColor }}
                 >
                   <img

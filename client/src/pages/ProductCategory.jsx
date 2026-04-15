@@ -6,7 +6,6 @@ import ProductCard from "../components/ProductCard";
 const ProductCategory = () => {
   const { products } = useAppContext();
   const { category } = useParams();
-  console.log(products);
 
   const normalizedCategory = category?.toLowerCase();
 

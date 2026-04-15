@@ -2,8 +2,9 @@ import { useAppContext } from "../context/AppContext";
 import { FaCartPlus } from "react-icons/fa";
 
 const ProductCard = ({ product }) => {
-  const { addToCart, removeFromCart, getItemQuantity, currency } =
+  const { addToCart, removeFromCart, getItemQuantity, currency, navigate } =
     useAppContext();
+  // const productId = product.category.toLowerCase()
 
   if (!product) return null;
 
@@ -15,7 +16,13 @@ const ProductCard = ({ product }) => {
       : 0;
 
   return (
-    <div className="group relative w-40 cursor-pointer rounded-xl border border-gray-100 bg-white p-2 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+    <div
+      onClick={() => {
+        navigate(`/products/${product.category.toLowerCase()}/${product._id}`);
+        scrollTo(0, 0);
+      }}
+      className="group relative w-40 cursor-pointer rounded-xl border border-gray-100 bg-white p-2 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+    >
       {/* IMAGE */}
       <div className="relative flex h-28 items-center justify-center overflow-hidden rounded-lg bg-gray-50">
         {/* 🔴 OFF BADGE */}
