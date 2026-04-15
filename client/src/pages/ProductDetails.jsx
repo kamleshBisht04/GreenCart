@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useAppContext } from "../context/AppContext.jsx";
+import { useAppContext } from "../context/AppContext";
 import { Link, useParams } from "react-router-dom";
 import { assets } from "../assets/assets.js";
 import ProductCard from "../components/ProductCard";
-import Breadcrumb from "../components/Breadcrumb .jsx";
+import Breadcrumb from "../components/Breadcrumb";
 
 const ProductDetails = () => {
   const { products, navigate, currency, addToCart } = useAppContext();
@@ -113,6 +113,7 @@ const ProductDetails = () => {
               ))}
             </ul>
           </div>
+          
 
           {/* 🛒 Buttons */}
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">

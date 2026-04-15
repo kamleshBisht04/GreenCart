@@ -90,15 +90,32 @@ const Navbar = () => {
           </div>
         )}
       </div>
+      {/*  mobile menu and cart  */}
+      <div className="flex items-center gap-6 sm:hidden">
+        <div
+          className="relative cursor-pointer"
+          onClick={() => navigate("/cart")}
+        >
+          <img
+            src={assets.nav_cart_icon}
+            alt="shopping Cart "
+            className="w-6 opacity-80"
+          />
+          {totalItems > 0 && (
+            <button className="bg-primary absolute -top-2 -right-3 h-[18px] w-[18px] rounded-full text-xs text-white">
+              {totalItems}
+            </button>
+          )}
+        </div>
 
-      <button
-        onClick={() => (open ? setOpen(false) : setOpen(true))}
-        aria-label="Menu"
-        className="sm:hidden"
-      >
-        {/* Menu Icon SVG */}
-        <img src={assets.menu_icon} alt="menu" />
-      </button>
+        <button
+          onClick={() => (open ? setOpen(false) : setOpen(true))}
+          aria-label="Menu"
+        >
+          {/* Menu Icon SVG */}
+          <img src={assets.menu_icon} alt="menu" />
+        </button>
+      </div>
 
       {/* Mobile Menu */}
       {open && (
