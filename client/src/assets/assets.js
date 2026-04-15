@@ -69,6 +69,13 @@ import vanilla_muffins_image from "./vanilla_muffins_image.png";
 import quinoa_image from "./quinoa_image.png";
 import brown_rice_image from "./brown_rice_image.png";
 import barley_image from "./barley_image.png";
+import snacks_image from "./snakes.png";
+import breakfast_sauces from "./Breakfast_sauces.png";
+import masala_Dry_fruits from "./masala_Dry_fruits.png";
+import rice_ata_dal from "./rice-ata-dal.png";
+import sweet_Cravings from "./sweet_Cravings.png";
+
+
 
 export const assets = {
   logo,
@@ -142,6 +149,39 @@ export const categories = [
     path: "Grains",
     image: grain_image,
     bgColor: "#F1E3F9",
+  },
+
+  // 🔥 New Added Categories
+
+  {
+    text: "Snacks & Chips",
+    path: "Snacks",
+    image: snacks_image,
+    bgColor: "#FFF3E0",
+  },
+  {
+    text: "Breakfast & Sauces",
+    path: "Breakfast",
+    image: breakfast_sauces,
+    bgColor: "#FFF8E1",
+  },
+  {
+    text: "Masala & Dry Fruits",
+    path: "Masala",
+    image: masala_Dry_fruits,
+    bgColor: "#F3E5F5",
+  },
+  {
+    text: "Rice, Atta & Dal",
+    path: "Grains",
+    image: rice_ata_dal,
+    bgColor: "#E8F5E9",
+  },
+  {
+    text: "Sweet Cravings",
+    path: "Sweets",
+    image: sweet_Cravings,
+    bgColor: "#FCE4EC",
   },
 ];
 
