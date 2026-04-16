@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useAppContext } from "../context/AppContext";
-import { dummyAddress } from "../assets/assets";
+import { assets, dummyAddress } from "../assets/assets";
 
 const Cart = () => {
   const {
@@ -21,6 +21,10 @@ const Cart = () => {
   );
   const [paymentOption, setPaymentOption] = useState("COD");
 
+  const subtotal = getTotalAmount(products);
+  const tax = Math.round(subtotal * 0.02);
+  const total = subtotal + tax;
+
   const cartArray = useMemo(() => {
     if (products.length === 0) return [];
 
@@ -28,17 +32,23 @@ const Cart = () => {
     products.forEach((p) => {
       productMap[p._id] = p;
     });
-    return Object.keys(cartItems).map((key) => ({
-      ...productMap,
-      quantity: cartItems[key],
-    }))
-  }, [cartItems, products]);
 
-  return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col px-6 py-16 md:flex-row">
+    return Object.keys(cartItems)
+      .map((key) => ({
+        ...productMap[key],
+        quantity: cartItems[key],
+      }))
+      .filter(Boolean);
+  }, [products, cartItems]);
+
+  return products.length > 0 && cartItems ? (
+    <div className="mt-12 flex flex-col md:flex-row">
       <div className="max-w-4xl flex-1">
         <h1 className="mb-6 text-3xl font-medium">
-          Shopping Cart <span className="text-primary text-sm">3 Items</span>
+          Shopping Cart{" "}
+          <span className="text-primary-dull text-sm">
+            {getTotalItems()} Items
+          </span>
         </h1>
 
         <div className="grid grid-cols-[2fr_1fr_1fr] pb-3 text-base font-medium text-gray-500">
@@ -53,7 +63,15 @@ const Cart = () => {
             className="grid grid-cols-[2fr_1fr_1fr] items-center pt-3 text-sm font-medium text-gray-500 md:text-base"
           >
             <div className="flex items-center gap-3 md:gap-6">
-              <div className="flex h-24 w-24 cursor-pointer items-center justify-center overflow-hidden rounded border border-gray-300">
+              <div
+                onClick={() => {
+                  navigate(
+                    `/products/${product.category.toLowerCase()}/${product._id}`,
+                  );
+                  scrollTo(0, 0);
+                }}
+                className="flex h-24 w-24 cursor-pointer items-center justify-center overflow-hidden rounded border border-gray-300"
+              >
                 <img
                   className="h-full max-w-full object-cover"
                   src={product?.image[0]}
@@ -64,12 +82,20 @@ const Cart = () => {
                 <p className="hidden font-semibold md:block">{product.name}</p>
                 <div className="font-normal text-gray-500/70">
                   <p>
-                    Size: <span>{product.size || "N/A"}</span>
+                    Weight: <span>{product.weight || "N/A"}</span>
                   </p>
                   <div className="flex items-center">
                     <p>Qty:</p>
-                    <select className="outline-none">
-                      {Array(5)
+                    <select
+                      onChange={(e) =>
+                        updateCartItem(product._id, Number(e.target.value))
+                      }
+                      value={cartItems[product._id]}
+                      className="outline-none"
+                    >
+                      {Array(
+                        cartItems[product._id] > 9 ? cartItems[product._id] : 9,
+                      )
                         .fill("")
                         .map((_, index) => (
                           <option key={index} value={index + 1}>
@@ -82,115 +108,126 @@ const Cart = () => {
               </div>
             </div>
             <p className="text-center">
-              ${product.offerPrice * product.quantity}
+              {currency}
+              {product.offerPrice * product.quantity}
             </p>
-            <button className="mx-auto cursor-pointer">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="m12.5 7.5-5 5m0-5 5 5m5.833-2.5a8.333 8.333 0 1 1-16.667 0 8.333 8.333 0 0 1 16.667 0"
-                  stroke="#FF532E"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+            <button
+              onClick={() => removeFromCart(product._id)}
+              className="mx-auto cursor-pointer"
+            >
+              <img
+                src={assets.remove_icon}
+                alt="remove icon"
+                className="inline-block h-6 w-6"
+              />
             </button>
           </div>
         ))}
 
-        <button className="group text-primary mt-8 flex cursor-pointer items-center gap-2 font-medium">
-          <svg
-            width="15"
-            height="11"
-            viewBox="0 0 15 11"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M14.09 5.5H1M6.143 10 1 5.5 6.143 1"
-              stroke="#615fff"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+        <button
+          onClick={() => {
+            navigate("/products");
+            scrollTo(0, 0);
+          }}
+          className="group text-primary-dull mt-8 flex cursor-pointer items-center gap-2 font-medium"
+        >
+          <img
+            src={assets.arrow_right_icon_colored}
+            className="transition group-hover:-translate-x-1"
+            alt="arrow icon"
+          />
           Continue Shopping
         </button>
       </div>
 
-      <div className="w-full max-w-[360px] border border-gray-300/70 bg-gray-100/40 p-5 max-md:mt-16">
-        <h2 className="text-xl font-medium md:text-xl">Order Summary</h2>
-        <hr className="my-5 border-gray-300" />
+      <div className="mt-10 w-full max-w-sm md:mt-0">
+        <div className="sticky top-6 rounded-2xl bg-white p-6 shadow-md">
+          <h2 className="text-lg font-semibold text-gray-900">Order Summary</h2>
 
-        <div className="mb-6">
-          <p className="text-sm font-medium uppercase">Delivery Address</p>
-          <div className="relative mt-2 flex items-start justify-between">
-            <p className="text-gray-500">No address found</p>
-            <button
-              onClick={() => setShowAddress(!showAddress)}
-              className="text-primary cursor-pointer hover:underline"
-            >
-              Change
-            </button>
+          <div className="mt-6 space-y-3 text-sm text-gray-600">
+            <div className="flex justify-between">
+              <span>Subtotal</span>
+              <span className="font-medium">
+                {currency}
+                {subtotal}
+              </span>
+            </div>
+
+            <div className="flex justify-between">
+              <span>Tax (2%)</span>
+              <span className="font-medium">
+                {currency}
+                {tax}
+              </span>
+            </div>
+
+            <div className="flex justify-between border-t pt-3 text-base font-semibold text-gray-900">
+              <span>Total</span>
+              <span>
+                {currency}
+                {total}
+              </span>
+            </div>
+          </div>
+
+          {/* ADDRESS */}
+          <div className="mt-6">
+            <p className="text-xs tracking-wider text-gray-400 uppercase">
+              Delivery Address
+            </p>
+
+            <div className="mt-2 flex items-center justify-between">
+              <p className="text-sm text-gray-500">
+                {selectedAddress
+                  ? `${selectedAddress.street}, 
+                            ${selectedAddress.city}, ${selectedAddress.state}, ${selectedAddress.country}`
+                  : "No address found"}
+              </p>
+
+              <button
+                onClick={() => setShowAddress(!showAddress)}
+                className="text-primary text-sm hover:underline"
+              >
+                Change
+              </button>
+            </div>
+
             {showAddress && (
-              <div className="absolute top-12 w-full border border-gray-300 bg-white py-1 text-sm">
-                <p
-                  onClick={() => setShowAddress(false)}
-                  className="p-2 text-gray-500 hover:bg-gray-100"
-                >
+              <div className="mt-3 overflow-hidden rounded-xl border text-sm">
+                <p className="cursor-pointer p-2 hover:bg-gray-100">
                   New York, USA
                 </p>
-                <p
-                  onClick={() => setShowAddress(false)}
-                  className="text-primary hover:bg-primary/10 cursor-pointer p-2 text-center"
-                >
-                  Add address
+                <p className="text-primary hover:bg-primary/10 cursor-pointer p-2">
+                  + Add new address
                 </p>
               </div>
             )}
           </div>
 
-          <p className="mt-6 text-sm font-medium uppercase">Payment Method</p>
+          {/* PAYMENT */}
+          <div className="mt-5">
+            <p className="text-xs tracking-wider text-gray-400 uppercase">
+              Payment Method
+            </p>
 
-          <select className="mt-2 w-full border border-gray-300 bg-white px-3 py-2 outline-none">
-            <option value="COD">Cash On Delivery</option>
-            <option value="Online">Online Payment</option>
-          </select>
-        </div>
+            <select className="mt-2 w-full rounded-xl border px-3 py-2 text-sm outline-none">
+              <option>Cash on Delivery</option>
+              <option>Online Payment</option>
+            </select>
+          </div>
 
-        <hr className="border-gray-300" />
+          {/* BUTTON */}
+          <button className="bg-primary hover:bg-primary-dull mt-6 h-12 w-full rounded-xl font-medium text-white shadow-sm transition">
+            Place Order
+          </button>
 
-        <div className="mt-4 space-y-2 text-gray-500">
-          <p className="flex justify-between">
-            <span>Price</span>
-            <span>$20</span>
-          </p>
-          <p className="flex justify-between">
-            <span>Shipping Fee</span>
-            <span className="text-green-600">Free</span>
-          </p>
-          <p className="flex justify-between">
-            <span>Tax (2%)</span>
-            <span>$20</span>
-          </p>
-          <p className="mt-3 flex justify-between text-lg font-medium">
-            <span>Total Amount:</span>
-            <span>$20</span>
+          <p className="mt-3 text-center text-xs text-gray-400">
+            Secure checkout • Fast delivery
           </p>
         </div>
-
-        <button className="bg-primary hover:bg-primary-dull mt-6 w-full cursor-pointer py-3 font-medium text-white transition">
-          Place Order
-        </button>
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default Cart;
