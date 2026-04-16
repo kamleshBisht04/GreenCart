@@ -1,24 +1,25 @@
 import { useState } from "react";
 import { useAppContext } from "../context/AppContext";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { assets } from "../assets/assets.js";
 import ProductCard from "../components/ProductCard";
 import Breadcrumb from "../components/Breadcrumb";
 
 const ProductDetails = () => {
-  const { products, navigate, currency, addToCart } = useAppContext();
+  const {
+    products,
+    navigate,
+    currency,
+    addToCart,
+    removeFromCart,
+    getItemQuantity,
+  } = useAppContext();
+
   const { id } = useParams();
   const product = products.find((item) => item._id === id);
-  const [thumbnail, setThumbnail] = useState(null);
 
-  const relatedProducts = product
-    ? products
-        .filter(
-          (item) =>
-            item.category === product.category && item._id !== product._id,
-        )
-        .slice(0, 7)
-    : [];
+  const qty = getItemQuantity(product?._id);
+  const [thumbnail, setThumbnail] = useState(null);
 
   if (!product) {
     return <div className="mt-20 text-center">Loading...</div>;
@@ -30,45 +31,51 @@ const ProductDetails = () => {
     ((product.price - product.offerPrice) / product.price) * 100,
   );
 
+  const relatedProducts = products
+    .filter(
+      (item) => item.category === product.category && item._id !== product._id,
+    )
+    .slice(0, 10);
+
   return (
     <div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6 lg:px-8">
-      {/* 🔗 Breadcrumb */}
-      <span className="flex flex-wrap gap-1 text-sm text-gray-500 ">
+      {/* Breadcrumb */}
+      <div className="text-sm text-gray-500">
         <Breadcrumb product={product} />
-      </span>
+      </div>
 
-      {/*  Main Section */}
+      {/* MAIN SECTION */}
       <div className="mt-10 grid gap-10 md:grid-cols-2">
-        {/* 🖼 Images */}
+        {/* IMAGE SECTION */}
         <div className="flex flex-col-reverse gap-4 sm:flex-row">
           {/* Thumbnails */}
           <div className="flex flex-row gap-3 sm:flex-col">
-            {product.image?.map((image, index) => (
+            {product.image?.map((img, i) => (
               <img
-                key={index}
-                onClick={() => setThumbnail(image)}
-                src={image}
-                className={`h-16 w-16 cursor-pointer rounded-lg border object-cover transition ${displayImage === image ? "border-primary" : "border-gray-300"}`}
+                key={i}
+                src={img}
+                onClick={() => setThumbnail(img)}
+                className={`h-16 w-16 cursor-pointer rounded-lg border object-cover transition hover:scale-105 ${
+                  displayImage === img ? "border-primary" : "border-gray-300"
+                }`}
               />
             ))}
           </div>
 
           {/* Main Image */}
-          <div className="group flex-1 overflow-hidden rounded-xl border bg-white p-4">
+          <div className="flex-1 rounded-xl border bg-white p-4">
             <img
               src={displayImage}
-              className="mx-auto h-[250px] w-full object-contain transition duration-300 group-hover:scale-110 sm:h-[300px]"
+              className="h-[280px] w-full object-contain sm:h-[350px]"
             />
           </div>
         </div>
 
-        {/* 📄 Details */}
+        {/* DETAILS SECTION */}
         <div className="flex flex-col">
-          <h1 className="text-xl font-semibold sm:text-2xl md:text-3xl">
-            {product.name}
-          </h1>
+          <h1 className="text-2xl font-bold md:text-3xl">{product.name}</h1>
 
-          {/* ⭐ Rating */}
+          {/* Rating */}
           <div className="mt-2 flex items-center gap-1">
             {Array(5)
               .fill("")
@@ -86,12 +93,13 @@ const ProductDetails = () => {
             <span className="text-sm text-gray-500">({product.rating})</span>
           </div>
 
-          {/* 💰 Price */}
+          {/* PRICE */}
           <div className="mt-4">
             <p className="text-sm text-gray-400 line-through">
               {currency}
               {product.price}
             </p>
+
             <p className="text-2xl font-bold text-green-600">
               {currency}
               {product.offerPrice}
@@ -104,32 +112,55 @@ const ProductDetails = () => {
             )}
           </div>
 
-          {/* 📄 Description */}
+          {/* DESCRIPTION */}
           <div className="mt-6">
             <p className="font-medium">About Product</p>
             <ul className="mt-2 ml-4 list-disc space-y-1 text-sm text-gray-600">
-              {product.description?.map((desc, index) => (
-                <li key={index}>{desc}</li>
+              {product.description?.map((d, i) => (
+                <li key={i}>{d}</li>
               ))}
             </ul>
           </div>
-          
 
-          {/* 🛒 Buttons */}
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <button
-              onClick={() => addToCart(product._id)}
-              className="w-full rounded-lg bg-gray-100 py-3 font-medium transition hover:bg-gray-200"
-            >
-              Add to Cart
-            </button>
+          {/* ACTION BUTTONS */}
+          <div className="mt-8 flex gap-3">
+            {/* Add / Qty */}
+            <div className="flex-1">
+              {qty === 0 ? (
+                <button
+                  onClick={() => addToCart(product._id)}
+                  className="flex h-12 w-full items-center justify-center rounded-lg bg-gray-100 font-medium hover:bg-gray-200"
+                >
+                  Add to Cart
+                </button>
+              ) : (
+                <div className="flex h-12 w-full items-center justify-between rounded-lg border bg-white px-4">
+                  <button
+                    onClick={() => removeFromCart(product._id)}
+                    className="text-xl font-bold hover:text-red-500"
+                  >
+                    −
+                  </button>
 
+                  <span className="text-base font-semibold">{qty}</span>
+
+                  <button
+                    onClick={() => addToCart(product._id)}
+                    className="text-xl font-bold hover:text-green-600"
+                  >
+                    +
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Buy Now */}
             <button
               onClick={() => {
                 addToCart(product._id);
                 navigate("/cart");
               }}
-              className="bg-primary hover:bg-primary-dull w-full rounded-lg py-3 font-medium text-white transition"
+              className="bg-primary hover:bg-primary-dull h-12 flex-1 rounded-lg font-medium text-white"
             >
               Buy Now
             </button>
@@ -137,19 +168,23 @@ const ProductDetails = () => {
         </div>
       </div>
 
-      {/* Related Products */}
+      {/* RELATED PRODUCTS */}
       <div className="mt-16">
-        <div className="flex flex-col items-center">
-          <p className="text-xl font-semibold sm:text-2xl">Related Products</p>
-          <div className="bg-primary mt-2 h-0.5 w-16 rounded-full"></div>
+        <div className="text-center">
+          <h2 className="text-2xl font-bold">Related Products</h2>
+          <div className="bg-primary mx-auto mt-2 h-1 w-16 rounded"></div>
         </div>
 
-        <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          {relatedProducts
-            .filter((item) => item.inStock)
-            .map((item) => (
-              <ProductCard key={item._id} product={item} />
-            ))}
+        <div className="marquee-mask mt-8 overflow-hidden">
+          <div className="animate-marquee flex w-max gap-4">
+            {[...relatedProducts, ...relatedProducts]
+              .filter((item) => item.inStock)
+              .map((item, i) => (
+                <div key={i} className="min-w-[180px]">
+                  <ProductCard product={item} />
+                </div>
+              ))}
+          </div>
         </div>
 
         <button
@@ -157,13 +192,13 @@ const ProductDetails = () => {
             navigate("/products");
             scrollTo(0, 0);
           }}
-          className="text-primary hover:bg-primary/10 mx-auto mt-10 block rounded-lg border px-8 py-2 text-sm transition"
+          className="text-primary hover:bg-primary/10 mx-auto mt-10 block rounded-lg border px-8 py-2 text-sm"
         >
           See more
         </button>
       </div>
 
-      {/* 📱 Mobile Sticky Bar */}
+      {/* MOBILE STICKY BAR */}
       <div className="fixed right-0 bottom-0 left-0 flex gap-2 border-t bg-white p-3 md:hidden">
         <button
           onClick={() => addToCart(product._id)}
@@ -171,6 +206,7 @@ const ProductDetails = () => {
         >
           Add
         </button>
+
         <button
           onClick={() => {
             addToCart(product._id);

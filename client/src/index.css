@@ -18,3 +18,28 @@
     @apply cursor-pointer;
   }
 }
+
+/* index.css */
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+
+/* Premium fade effect */
+.marquee-mask {
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+/* Hover pe pause */
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
