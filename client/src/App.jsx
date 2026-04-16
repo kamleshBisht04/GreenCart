@@ -4,12 +4,13 @@ import { useAppContext } from "./context/AppContext";
 import Navbar from "./layout/Navbar";
 import Home from "./pages/Home";
 import Contact from "./pages/Contact";
-import Footer from "./components/Footer";
 import Login from "./components/Login";
 import AllProducts from "./pages/AllProducts";
 import CategoryBar from "./components/CategoryBar";
 import ProductCategory from "./pages/ProductCategory";
 import ProductDetails from "./pages/ProductDetails";
+import Cart from "./pages/Cart";
+import Footer from "./layout/Footer";
 
 const App = () => {
   const isSellerPath = useLocation().pathname.includes("seller");
@@ -32,6 +33,7 @@ const App = () => {
           <Route path="/products" element={<AllProducts />} />
           <Route path="/products/:category" element={<ProductCategory />} />
           <Route path="/products/:category/:id" element={<ProductDetails />} />
+          <Route path="/cart" element={<Cart/>}/>
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </div>

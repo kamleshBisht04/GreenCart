@@ -18,6 +18,8 @@ export const AppContextProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
 
+  console.log(cartItems);
+
   // Fetch All Products
   const fetchProducts = async () => {
     setProducts(dummyProducts);
@@ -92,7 +94,7 @@ export const AppContextProvider = ({ children }) => {
   };
 
   //Get total Price
-  const getTotalAmount = (products) => {
+  const getTotalAmount = () => {
     return Object.entries(cartItems).reduce((total, [id, qty]) => {
       const product = products.find((p) => p._id === id);
       return total + (product?.offerPrice || 0) * qty;
