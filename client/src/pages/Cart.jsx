@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import { useAppContext } from "../context/AppContext";
 import { assets, dummyAddress } from "../assets/assets";
 
+
+
 const Cart = () => {
   const {
     products,
@@ -21,17 +23,17 @@ const Cart = () => {
   );
   const [paymentOption, setPaymentOption] = useState("COD");
 
-  const subtotal = getTotalAmount(products);
+  const subtotal = useMemo(
+    () => getTotalAmount(products),
+    [getTotalAmount, products],
+  );
   const tax = Math.round(subtotal * 0.02);
   const total = subtotal + tax;
 
   const cartArray = useMemo(() => {
     if (products.length === 0) return [];
 
-    const productMap = {};
-    products.forEach((p) => {
-      productMap[p._id] = p;
-    });
+    const productMap = Object.fromEntries(products.map((p) => [p._id, p]));
 
     return Object.keys(cartItems)
       .map((key) => ({
@@ -41,8 +43,9 @@ const Cart = () => {
       .filter(Boolean);
   }, [products, cartItems]);
 
-  return products.length > 0 && cartItems ? (
+  return cartArray.length > 0 ? (
     <div className="mt-12 flex flex-col md:flex-row">
+      {/* LEFT */}
       <div className="max-w-4xl flex-1">
         <h1 className="mb-6 text-3xl font-medium">
           Shopping Cart{" "}
@@ -57,9 +60,9 @@ const Cart = () => {
           <p className="text-center">Action</p>
         </div>
 
-        {cartArray.map((product, index) => (
+        {cartArray.map((product) => (
           <div
-            key={index}
+            key={product._id}
             className="grid grid-cols-[2fr_1fr_1fr] items-center pt-3 text-sm font-medium text-gray-500 md:text-base"
           >
             <div className="flex items-center gap-3 md:gap-6">
@@ -68,24 +71,28 @@ const Cart = () => {
                   navigate(
                     `/products/${product.category.toLowerCase()}/${product._id}`,
                   );
-                  scrollTo(0, 0);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
                 className="flex h-24 w-24 cursor-pointer items-center justify-center overflow-hidden rounded border border-gray-300"
               >
                 <img
                   className="h-full max-w-full object-cover"
-                  src={product?.image[0]}
+                  src={product?.image?.[0]}
                   alt={product.name}
                 />
               </div>
+
               <div>
                 <p className="hidden font-semibold md:block">{product.name}</p>
+
                 <div className="font-normal text-gray-500/70">
                   <p>
                     Weight: <span>{product.weight || "N/A"}</span>
                   </p>
+
                   <div className="flex items-center">
                     <p>Qty:</p>
+
                     <select
                       onChange={(e) =>
                         updateCartItem(product._id, Number(e.target.value))
@@ -93,9 +100,7 @@ const Cart = () => {
                       value={cartItems[product._id]}
                       className="outline-none"
                     >
-                      {Array(
-                        cartItems[product._id] > 9 ? cartItems[product._id] : 9,
-                      )
+                      {Array(Math.max(cartItems[product._id], 9))
                         .fill("")
                         .map((_, index) => (
                           <option key={index} value={index + 1}>
@@ -107,10 +112,12 @@ const Cart = () => {
                 </div>
               </div>
             </div>
+
             <p className="text-center">
               {currency}
-              {product.offerPrice * product.quantity}
+              {(product?.offerPrice || 0) * product.quantity}
             </p>
+
             <button
               onClick={() => removeFromCart(product._id)}
               className="mx-auto cursor-pointer"
@@ -127,7 +134,7 @@ const Cart = () => {
         <button
           onClick={() => {
             navigate("/products");
-            scrollTo(0, 0);
+            window.scrollTo({ top: 0, behavior: "smooth" });
           }}
           className="group text-primary-dull mt-8 flex cursor-pointer items-center gap-2 font-medium"
         >
@@ -140,6 +147,7 @@ const Cart = () => {
         </button>
       </div>
 
+      {/* RIGHT */}
       <div className="mt-10 w-full max-w-sm md:mt-0">
         <div className="sticky top-6 rounded-2xl bg-white p-6 shadow-md">
           <h2 className="text-lg font-semibold text-gray-900">Order Summary</h2>
@@ -179,8 +187,7 @@ const Cart = () => {
             <div className="mt-2 flex items-center justify-between">
               <p className="text-sm text-gray-500">
                 {selectedAddress
-                  ? `${selectedAddress.street}, 
-                            ${selectedAddress.city}, ${selectedAddress.state}, ${selectedAddress.country}`
+                  ? `${selectedAddress.street}, ${selectedAddress.city}, ${selectedAddress.state}, ${selectedAddress.country}`
                   : "No address found"}
               </p>
 
@@ -193,11 +200,25 @@ const Cart = () => {
             </div>
 
             {showAddress && (
-              <div className="mt-3 overflow-hidden rounded-xl border text-sm">
-                <p className="cursor-pointer p-2 hover:bg-gray-100">
-                  New York, USA
-                </p>
-                <p className="text-primary hover:bg-primary/10 cursor-pointer p-2">
+              <div className="z-50 overflow-hidden relative mt-3 rounded-xl border text-sm">
+                {addresses.map((address, index) => (
+                  <p
+                    key={index}
+                    onClick={() => {
+                      setSelectedAddress(address);
+                      setShowAddress(false);
+                    }}
+                    className="cursor-pointer p-2 hover:bg-gray-100"
+                  >
+                    {address.street},{address.city},{address.state},
+                    {address.country}
+                  </p>
+                ))}
+
+                <p
+                  onClick={() => navigate("/add-address")}
+                  className="text-primary hover:bg-primary/10 cursor-pointer p-2"
+                >
                   + Add new address
                 </p>
               </div>
@@ -210,15 +231,21 @@ const Cart = () => {
               Payment Method
             </p>
 
-            <select className="mt-2 w-full rounded-xl border px-3 py-2 text-sm outline-none">
-              <option>Cash on Delivery</option>
-              <option>Online Payment</option>
+            <select
+              onChange={(e) => setPaymentOption(e.target.value)}
+              className="mt-2 w-full rounded-xl border px-3 py-2 text-sm outline-none"
+            >
+              <option value="COD">Cash on Delivery</option>
+              <option value="ONLINE">Online Payment</option>
             </select>
           </div>
 
           {/* BUTTON */}
-          <button className="bg-primary hover:bg-primary-dull mt-6 h-12 w-full rounded-xl font-medium text-white shadow-sm transition">
-            Place Order
+          <button
+            disabled={!selectedAddress}
+            className="bg-primary hover:bg-primary-dull mt-6 h-12 w-full rounded-xl font-medium text-white shadow-sm transition disabled:opacity-50"
+          >
+            {paymentOption === "COD" ? "Place Order" : "Proceed to Checkout"}
           </button>
 
           <p className="mt-3 text-center text-xs text-gray-400">
@@ -227,7 +254,17 @@ const Cart = () => {
         </div>
       </div>
     </div>
-  ) : null;
+  ) : (
+    <div className="mt-20 text-center">
+      <h2 className="text-2xl font-semibold">Your cart is empty 🛒</h2>
+      <button
+        onClick={() => navigate("/products")}
+        className="bg-primary mt-5 rounded-lg px-6 py-2 text-white"
+      >
+        Shop Now
+      </button>
+    </div>
+  );
 };
 
 export default Cart;
