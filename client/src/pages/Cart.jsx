@@ -2,8 +2,6 @@ import { useMemo, useState } from "react";
 import { useAppContext } from "../context/AppContext";
 import { assets, dummyAddress } from "../assets/assets";
 
-
-
 const Cart = () => {
   const {
     products,
