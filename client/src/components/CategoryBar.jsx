@@ -7,9 +7,9 @@ const CategoryBar = () => {
   const [active, setActive] = useState("");
 
   return (
-    <div className="w-full border-b bg-white">
-      <div className="mx-auto max-w-[100rem] px-4 py-3">
-        <div className="scrollbar-hide flex justify-center gap-7 overflow-x-auto scroll-smooth">
+    <div className="w-full overflow-hidden  bg-white">
+      <div className="w-full px-4 py-3">
+        <div className="scrollbar-hide flex w-max gap-7 overflow-x-auto scroll-smooth">
           {categories.map((cat, index) => (
             <div
               key={index}
@@ -22,10 +22,7 @@ const CategoryBar = () => {
             >
               {/* IMAGE (BIG + CLEAN) */}
               <div className="flex flex-col items-center justify-center">
-                <div
-                  className="flex h-16 w-16 items-center justify-center rounded-2xl border border-gray-100 p-1 transition duration-200 group-hover:scale-105"
-                  // style={{ backgroundColor: cat.bgColor }}
-                >
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-gray-100 p-1 transition duration-200 group-hover:scale-105">
                   <img
                     src={cat.image}
                     alt={cat.text}

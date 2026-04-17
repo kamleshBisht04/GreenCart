@@ -9,9 +9,9 @@ const Login = () => {
 
   const { SetShowUserLogIn, setUser } = useAppContext();
 
-  const handleSubmit = (e) => {
+  const onSubmitHandler = (e) => {
     e.preventDefault();
-    setUser({ name, email });
+    setUser({ name: "kamlesh", email: "kamleshgreencart.com" });
     SetShowUserLogIn(false);
   };
 
@@ -21,7 +21,7 @@ const Login = () => {
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 text-sm text-gray-600"
     >
       <form
-        onSubmit={handleSubmit}
+        onSubmit={onSubmitHandler}
         onClick={(e) => e.stopPropagation()} //  prevent close on form click
         className="relative m-auto flex w-80 flex-col gap-4 rounded-lg border border-gray-200 bg-white p-8 py-10 shadow-xl sm:w-[360px]"
       >
@@ -29,7 +29,7 @@ const Login = () => {
         <button
           type="button"
           onClick={() => SetShowUserLogIn(false)}
-          className="absolute top-3 right-3 text-xl text-primary transition-transform duration-500 hover:rotate-180 hover:text-primary-dull"
+          className="text-primary hover:text-primary-dull absolute top-3 right-3 text-xl transition-transform duration-500 hover:rotate-180"
         >
           ×
         </button>

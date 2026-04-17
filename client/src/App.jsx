@@ -6,12 +6,13 @@ import Home from "./pages/Home";
 import Contact from "./pages/Contact";
 import Login from "./components/Login";
 import AllProducts from "./pages/AllProducts";
-import CategoryBar from "./components/CategoryBar";
+// import CategoryBar from "./components/CategoryBar";
 import ProductCategory from "./pages/ProductCategory";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
 import Footer from "./layout/Footer";
 import AddAddress from "./pages/AddAddress";
+import MyOrders from "./pages/MyOrders";
 
 const App = () => {
   const isSellerPath = useLocation().pathname.includes("seller");
@@ -21,7 +22,7 @@ const App = () => {
       {!isSellerPath && (
         <>
           <Navbar />
-          <CategoryBar />
+          {/* <CategoryBar /> */}
         </>
       )}
       {showUserLogIn ? <Login /> : null}
@@ -36,6 +37,8 @@ const App = () => {
           <Route path="/products/:category/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/add-address" element={<AddAddress />} />
+          <Route path="/add-address" element={<AddAddress />} />
+          <Route path="/my-orders" element={<MyOrders />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </div>

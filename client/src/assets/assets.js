@@ -75,8 +75,6 @@ import masala_Dry_fruits from "./masala_Dry_fruits.png";
 import rice_ata_dal from "./rice-ata-dal.png";
 import sweet_Cravings from "./sweet_Cravings.png";
 
-
-
 export const assets = {
   logo,
   search_icon,
@@ -144,12 +142,6 @@ export const categories = [
     image: bakery_image,
     bgColor: "#E0F6FE",
   },
-  {
-    text: "Grains & Cereals",
-    path: "Grains",
-    image: grain_image,
-    bgColor: "#F1E3F9",
-  },
 
   // 🔥 New Added Categories
 
@@ -176,6 +168,66 @@ export const categories = [
     path: "Grains",
     image: rice_ata_dal,
     bgColor: "#E8F5E9",
+  },
+  {
+    text: "Sweet Cravings",
+    path: "Sweets",
+    image: sweet_Cravings,
+    bgColor: "#FCE4EC",
+  },
+  {
+    text: "Sweet Cravings",
+    path: "Sweets",
+    image: sweet_Cravings,
+    bgColor: "#FCE4EC",
+  },
+  {
+    text: "Sweet Cravings",
+    path: "Sweets",
+    image: sweet_Cravings,
+    bgColor: "#FCE4EC",
+  },
+  {
+    text: "Sweet Cravings",
+    path: "Sweets",
+    image: sweet_Cravings,
+    bgColor: "#FCE4EC",
+  },
+  {
+    text: "Sweet Cravings",
+    path: "Sweets",
+    image: sweet_Cravings,
+    bgColor: "#FCE4EC",
+  },
+  {
+    text: "Sweet Cravings",
+    path: "Sweets",
+    image: sweet_Cravings,
+    bgColor: "#FCE4EC",
+  },
+  {
+    text: "Sweet Cravings",
+    path: "Sweets",
+    image: sweet_Cravings,
+    bgColor: "#FCE4EC",
+  },
+  {
+    text: "Sweet Cravings",
+    path: "Sweets",
+    image: sweet_Cravings,
+    bgColor: "#FCE4EC",
+  },
+  {
+    text: "Sweet Cravings",
+    path: "Sweets",
+    image: sweet_Cravings,
+    bgColor: "#FCE4EC",
+  },
+  {
+    text: "Sweet Cravings",
+    path: "Sweets",
+    image: sweet_Cravings,
+    bgColor: "#FCE4EC",
   },
   {
     text: "Sweet Cravings",
