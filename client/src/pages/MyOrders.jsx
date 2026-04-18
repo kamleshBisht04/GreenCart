@@ -1,114 +1,74 @@
-const MyOrders = () => {
-  const boxIcon =
-    "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/e-commerce/boxIcon.svg";
+/* eslint-disable react-hooks/set-state-in-effect */
+import { useEffect, useState } from "react";
+import { useAppContext } from "../context/AppContext.jsx";
+import { dummyOrders } from "../assets/assets.js";
 
-  const orders = [
-    {
-      id: 1,
-      items: [{ product: { name: "Nike Air Max 270" }, quantity: 1 }],
-      address: {
-        firstName: "John",
-        lastName: "Doe",
-        street: "123 Main St",
-        city: "New York",
-        state: "NY",
-        zipcode: "10001",
-        country: "USA",
-      },
-      amount: 320.0,
-      paymentType: "Credit Card",
-      orderDate: "10/10/2022",
-      isPaid: true,
-    },
-    {
-      id: 1,
-      items: [{ product: { name: "Nike Air Max 270" }, quantity: 1 }],
-      address: {
-        firstName: "John",
-        lastName: "Doe",
-        street: "123 Main St",
-        city: "New York",
-        state: "NY",
-        zipcode: "10001",
-        country: "USA",
-      },
-      amount: 320.0,
-      paymentType: "Credit Card",
-      orderDate: "10/10/2022",
-      isPaid: true,
-    },
-    {
-      id: 1,
-      items: [{ product: { name: "Nike Air Max 270" }, quantity: 1 }],
-      address: {
-        firstName: "John",
-        lastName: "Doe",
-        street: "123 Main St",
-        city: "New York",
-        state: "NY",
-        zipcode: "10001",
-        country: "USA",
-      },
-      amount: 320.0,
-      paymentType: "Credit Card",
-      orderDate: "10/10/2022",
-      isPaid: true,
-    },
-  ];
+function MyOrders() {
+  const [myOrders, setMyOrders] = useState([]);
+  const { currency } = useAppContext();
+ 
+  const fetchMyOrders = async () => {
+    setMyOrders(dummyOrders);
+  };
+
+  useEffect(() => {
+    fetchMyOrders();
+  }, []);
+
   return (
-    <div className="space-y-4 p-4 md:p-10">
-      <h2 className="text-lg font-medium">Orders List</h2>
-      {orders.map((order, index) => (
+    <div className="mt-8 pb-8">
+      <div className="mb-8 flex w-max flex-col items-end">
+        <p className="text-2xl font-medium uppercase">My Orders</p>
+        <div className="bg-primary-dull h-0.5 w-16 rounded-full"></div>
+      </div>
+      {myOrders.map((order, index) => (
         <div
           key={index}
-          className="flex max-w-4xl flex-col gap-5 rounded-md border border-gray-300 p-5 text-gray-800 md:grid md:grid-cols-[2fr_1fr_1fr_1fr] md:items-center"
+          className="mb-10 max-w-4xl rounded-lg border border-gray-300 p-4 py-5"
         >
-          <div className="flex gap-5">
-            <img
-              className="h-12 w-12 object-cover opacity-60"
-              src={boxIcon}
-              alt="boxIcon"
-            />
-            <>
-              {order.items.map((item, index) => (
-                <div key={index} className="flex flex-col justify-center">
-                  <p className="font-medium">
-                    {item.product.name}{" "}
-                    <span
-                      className={`text-indigo-500 ${item.quantity < 2 && "hidden"}`}
-                    >
-                      x {item.quantity}
-                    </span>
-                  </p>
-                </div>
-              ))}
-            </>
-          </div>
-
-          <div className="text-sm">
-            <p className="mb-1 font-medium">
-              {order.address.firstName} {order.address.lastName}
-            </p>
-            <p>
-              {order.address.street}, {order.address.city},{" "}
-              {order.address.state},{order.address.zipcode},{" "}
-              {order.address.country}
-            </p>
-          </div>
-
-          <p className="my-auto text-base font-medium text-black/70">
-            ${order.amount}
+          <p className="flex justify-between text-gray-400 max-md:flex-col md:items-center md:font-medium">
+            <span>OrderId: {order._id}</span>
+            <span>Payment: {order.paymentType}</span>
+            <span>
+              Total Amount: {currency}
+              {order.amount}
+            </span>
           </p>
-
-          <div className="flex flex-col text-sm">
-            <p>Method: {order.paymentType}</p>
-            <p>Date: {order.orderDate}</p>
-            <p>Payment: {order.isPaid ? "Paid" : "Pending"}</p>
-          </div>
+          {order.items.map((item, index) => (
+            <div
+              key={index}
+              className={`relative bg-white text-gray-500/70 ${order.items.length !== index + 1 && "border-b"} flex w-full max-w-4xl flex-col justify-between border-gray-300 p-4 py-5 md:flex-row md:items-center md:gap-16`}
+            >
+              <div className="mb-4 flex items-center md:mb-0">
+                <div className="bg-primary/10 rounded-lg p-4">
+                  <img
+                    src={item.product.image[0]}
+                    alt=""
+                    className="h-16 w-16"
+                  />
+                </div>
+                <div className="ml-4">
+                  <h2 className="text-xl font-medium text-gray-800">
+                    {item.product.name}
+                  </h2>
+                  <p>Category: {item.product.category}</p>
+                </div>
+              </div>
+              <div className="mb-4 flex flex-col justify-center md:mb-0 md:ml-8">
+                <p>Quantity: {item.quantity || "1"}</p>
+                <p>Status: {order.status}</p>
+                <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
+              </div>
+              <p className="text-primary-dull text-lg font-medium">
+                Amount: {currency}
+                {item.product.offerPrice * item.quantity}
+              </p>
+            </div>
+          ))}
         </div>
       ))}
     </div>
   );
-};
+}
 
 export default MyOrders;

@@ -31,7 +31,6 @@ import bottles_image from "./bottles_image.png";
 import maggi_image from "./maggi_image.png";
 import dairy_product_image from "./dairy_product_image.png";
 import bakery_image from "./bakery_image.png";
-import grain_image from "./grain_image.png";
 import potato_image_1 from "./potato_image_1.png";
 import potato_image_2 from "./potato_image_2.png";
 import potato_image_3 from "./potato_image_3.png";
@@ -74,6 +73,7 @@ import breakfast_sauces from "./Breakfast_sauces.png";
 import masala_Dry_fruits from "./masala_Dry_fruits.png";
 import rice_ata_dal from "./rice-ata-dal.png";
 import sweet_Cravings from "./sweet_Cravings.png";
+import emptyCart from "./emptyCart.png";
 
 export const assets = {
   logo,
@@ -103,6 +103,7 @@ export const assets = {
   bottom_banner_image_sm,
   add_address_iamge,
   box_icon,
+  emptyCart,
 };
 
 export const categories = [
@@ -168,66 +169,6 @@ export const categories = [
     path: "Grains",
     image: rice_ata_dal,
     bgColor: "#E8F5E9",
-  },
-  {
-    text: "Sweet Cravings",
-    path: "Sweets",
-    image: sweet_Cravings,
-    bgColor: "#FCE4EC",
-  },
-  {
-    text: "Sweet Cravings",
-    path: "Sweets",
-    image: sweet_Cravings,
-    bgColor: "#FCE4EC",
-  },
-  {
-    text: "Sweet Cravings",
-    path: "Sweets",
-    image: sweet_Cravings,
-    bgColor: "#FCE4EC",
-  },
-  {
-    text: "Sweet Cravings",
-    path: "Sweets",
-    image: sweet_Cravings,
-    bgColor: "#FCE4EC",
-  },
-  {
-    text: "Sweet Cravings",
-    path: "Sweets",
-    image: sweet_Cravings,
-    bgColor: "#FCE4EC",
-  },
-  {
-    text: "Sweet Cravings",
-    path: "Sweets",
-    image: sweet_Cravings,
-    bgColor: "#FCE4EC",
-  },
-  {
-    text: "Sweet Cravings",
-    path: "Sweets",
-    image: sweet_Cravings,
-    bgColor: "#FCE4EC",
-  },
-  {
-    text: "Sweet Cravings",
-    path: "Sweets",
-    image: sweet_Cravings,
-    bgColor: "#FCE4EC",
-  },
-  {
-    text: "Sweet Cravings",
-    path: "Sweets",
-    image: sweet_Cravings,
-    bgColor: "#FCE4EC",
-  },
-  {
-    text: "Sweet Cravings",
-    path: "Sweets",
-    image: sweet_Cravings,
-    bgColor: "#FCE4EC",
   },
   {
     text: "Sweet Cravings",

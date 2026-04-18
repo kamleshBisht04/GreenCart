@@ -198,7 +198,7 @@ const Cart = () => {
             </div>
 
             {showAddress && (
-              <div className="z-50 overflow-hidden relative mt-3 rounded-xl border text-sm">
+              <div className="relative z-50 mt-3 overflow-hidden rounded-xl border text-sm">
                 {addresses.map((address, index) => (
                   <p
                     key={index}
@@ -240,6 +240,7 @@ const Cart = () => {
 
           {/* BUTTON */}
           <button
+            onClick={() => navigate("/my-orders")}
             disabled={!selectedAddress}
             className="bg-primary hover:bg-primary-dull mt-6 h-12 w-full rounded-xl font-medium text-white shadow-sm transition disabled:opacity-50"
           >
@@ -253,11 +254,18 @@ const Cart = () => {
       </div>
     </div>
   ) : (
-    <div className="mt-20 text-center">
-      <h2 className="text-2xl font-semibold">Your cart is empty 🛒</h2>
+    <div className="mt-20 flex flex-col items-center text-center">
+      <img
+        src={assets.emptyCart}
+        alt="emptyCart"
+        className="w-[250px] object-contain"
+      />
+
+      <h2 className="mt-4 text-2xl font-semibold">Your cart is empty </h2>
+
       <button
         onClick={() => navigate("/products")}
-        className="bg-primary mt-5 rounded-lg px-6 py-2 text-white"
+        className="bg-primary hover:bg-primary-dull mt-5 rounded-lg px-6 py-2 text-white transition"
       >
         Shop Now
       </button>
