@@ -27,7 +27,7 @@ const Navbar = () => {
     }
   }, [searchQuery, navigate]);
   return (
-    <nav className="sticky top-0 z-50 flex items-center justify-between border-b border-gray-300 bg-white px-6 py-4 transition-all md:px-16 lg:px-24 xl:px-32">
+    <nav className="sticky top-0 z-50 flex items-center justify-between border-b border-gray-300 bg-white/70 px-6 py-4 backdrop-blur-md transition-all md:px-16 lg:px-24 xl:px-32">
       <NavLink to="/" onClick={() => setOpen(false)}>
         <img src={assets.logo} alt="GreenCart website logo" />
       </NavLink>
