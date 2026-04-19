@@ -12,7 +12,7 @@
   --color-primary: #4fbf8b;
   --color-primary-dull: #44ae7c;
 
-
+  /* fonts */
   --font-poppins:"Poppins",sans-serif;
   --font-Geist:"Geist",sans-serif;
   --font-Outfit:"Outfit",sans-serif;
@@ -50,11 +50,3 @@
   );
 }
 
-.scrollbar-hide {
-  -ms-overflow-style: none; /* IE & Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
-}

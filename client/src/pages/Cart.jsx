@@ -147,7 +147,7 @@ const Cart = () => {
 
       {/* RIGHT */}
       <div className="mt-10 w-full max-w-sm md:mt-0">
-        <div className="sticky top-6 rounded-2xl bg-white p-6 shadow-md">
+        <div className="sticky top-20 rounded-2xl bg-white p-6 shadow-md">
           <h2 className="text-lg font-semibold text-gray-900">Order Summary</h2>
 
           <div className="mt-6 space-y-3 text-sm text-gray-600">
