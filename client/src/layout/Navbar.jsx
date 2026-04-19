@@ -8,7 +8,7 @@ const Navbar = () => {
   const {
     user,
     setUser,
-    SetShowUserLogIn,
+    setShowUserLogIn,
     navigate,
     setSearchQuery,
     searchQuery,
@@ -27,7 +27,7 @@ const Navbar = () => {
     }
   }, [searchQuery, navigate]);
   return (
-    <nav className="relative flex items-center justify-between border-b border-gray-300 bg-white px-6 py-4 transition-all md:px-16 lg:px-24 xl:px-32">
+    <nav className="sticky top-0 z-50 flex items-center justify-between border-b border-gray-300 bg-white px-6 py-4 transition-all md:px-16 lg:px-24 xl:px-32">
       <NavLink to="/" onClick={() => setOpen(false)}>
         <img src={assets.logo} alt="GreenCart website logo" />
       </NavLink>
@@ -65,7 +65,7 @@ const Navbar = () => {
 
         {!user ? (
           <button
-            onClick={() => SetShowUserLogIn(true)}
+            onClick={() => setShowUserLogIn(true)}
             className="bg-primary hover:bg-primary-dull cursor-pointer rounded-full px-8 py-2 text-white transition"
           >
             Login
@@ -140,7 +140,7 @@ const Navbar = () => {
             <button
               onClick={() => {
                 setOpen(false);
-                SetShowUserLogIn(true);
+                setShowUserLogIn(true);
               }}
               className="bg-primary hover:bg-primary-dull mt-2 cursor-pointer rounded-full px-6 py-2 text-sm text-white transition"
             >
