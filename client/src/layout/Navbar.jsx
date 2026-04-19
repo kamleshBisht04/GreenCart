@@ -69,20 +69,14 @@ const Navbar = () => {
 
       {/* Desktop Menu */}
       <div className="hidden items-center gap-8 sm:flex">
-        {/* <NavLink to="/">Home</NavLink>
-        <NavLink to="/products">All Products</NavLink>
-        <NavLink to="/contact">Contact</NavLink> */}
-
         <div className="hidden items-center gap-8 sm:flex">
           {navLinks.map((link) => (
             <NavLink
               key={link.path}
               to={link.path}
               className={({ isActive }) =>
-                `decoration-[2px] underline-offset-4  transition rounded-full ${
-                  isActive
-                    ? "text-primary "
-                    : "hover:text-primary "
+                `rounded-full decoration-[2px] underline-offset-4 transition ${
+                  isActive ? "text-primary " : "hover:text-primary "
                 }`
               }
             >
