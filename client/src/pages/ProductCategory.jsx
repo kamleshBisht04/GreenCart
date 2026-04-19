@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 import { categories } from "../assets/assets";
 import ProductCard from "../components/ProductCard";
+import ProgressDots from "../components/ProgressDots";
 
 const ProductCategory = () => {
   const { products } = useAppContext();
@@ -23,11 +24,7 @@ const ProductCategory = () => {
         <div className="item-end flex w-max flex-col">
           <p className="text-2xl font-medium">{searchCategory.text}</p>
 
-          <div className="mt-2 flex items-center gap-2">
-            <div className="bg-primary h-[4px] w-10 rounded-full" />
-            <div className="bg-primary/40 h-[4px] w-3 rounded-full" />
-            <div className="bg-primary/20 h-[4px] w-2 rounded-full" />
-          </div>
+          <ProgressDots />
         </div>
       )}
 

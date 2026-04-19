@@ -6,7 +6,7 @@ import { dummyOrders } from "../assets/assets.js";
 function MyOrders() {
   const [myOrders, setMyOrders] = useState([]);
   const { currency } = useAppContext();
- 
+
   const fetchMyOrders = async () => {
     setMyOrders(dummyOrders);
   };
@@ -54,6 +54,7 @@ function MyOrders() {
                   <p>Category: {item.product.category}</p>
                 </div>
               </div>
+
               <div className="mb-4 flex flex-col justify-center md:mb-0 md:ml-8">
                 <p>Quantity: {item.quantity || "1"}</p>
                 <p>Status: {order.status}</p>
