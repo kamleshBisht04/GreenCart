@@ -11,6 +11,11 @@
 @theme {
   --color-primary: #4fbf8b;
   --color-primary-dull: #44ae7c;
+
+
+  --font-poppins:"Poppins",sans-serif;
+  --font-Geist:"Geist",sans-serif;
+  --font-Outfit:"Outfit",sans-serif;
 }
 
 @layer components {
