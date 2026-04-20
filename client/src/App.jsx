@@ -64,9 +64,9 @@ const App = () => {
             </Route>
           </Routes>
         </div>
+      {!isSellerPath && <Footer />}
       </div>
 
-      {!isSellerPath && <Footer />}
     </div>
   );
 };

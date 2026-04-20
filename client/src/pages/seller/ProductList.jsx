@@ -5,7 +5,7 @@ const ProductList = () => {
   const { products, currency } = useAppContext();
 
   return (
-    <div className="flex flex-1 flex-col justify-between ">
+    <div className="flex flex-1 flex-col justify-between">
       <div className="w-full p-4 md:p-10">
         <h2 className="text-lg font-medium">All Products</h2>
         <div className="bg-primary h-0.5 w-25 rounded-full mb-4 "></div>
