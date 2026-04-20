@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useAppContext } from "../../context/AppContext";
+import { IoChevronBackCircleOutline } from "react-icons/io5";
 
 const SellerLogIn = () => {
   const { isSeller, setIsSeller, navigate } = useAppContext();
@@ -21,6 +22,10 @@ const SellerLogIn = () => {
   return (
     !isSeller && (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-100 via-white to-green-50 px-4">
+        <IoChevronBackCircleOutline
+          className="relative h-8 w-8 cursor-pointer"
+          onClick={() => navigate("/")}
+        />
         <form
           onSubmit={onSubmitHandler}
           className="w-full max-w-sm rounded-2xl border border-white/30 bg-white/80 p-8 shadow-2xl backdrop-blur-lg"

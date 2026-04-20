@@ -7,17 +7,17 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { SetShowUserLogIn, setUser } = useAppContext();
+  const { setShowUserLogIn, setUser } = useAppContext();
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
     setUser({ name: "kamlesh", email: "kamleshgreencart.com" });
-    SetShowUserLogIn(false);
+    setShowUserLogIn(false);
   };
 
   return (
     <div
-      onClick={() => SetShowUserLogIn(false)} //  overlay click
+      onClick={() => setShowUserLogIn(false)} //  overlay click
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 text-sm text-gray-600"
     >
       <form
@@ -28,7 +28,7 @@ const Login = () => {
         {/*  CLOSE BUTTON (TOP RIGHT CORNER) */}
         <button
           type="button"
-          onClick={() => SetShowUserLogIn(false)}
+          onClick={() => setShowUserLogIn(false)}
           className="text-primary hover:text-primary-dull absolute top-3 right-3 text-xl transition-transform duration-500 hover:rotate-180"
         >
           ×

@@ -12,6 +12,7 @@ const Navbar = () => {
     { name: "Home", path: "/" },
     { name: "All Products", path: "/products" },
     { name: "Contact", path: "/contact" },
+    { name: "Admin", path: "/seller" },
   ];
 
   // animated placeholder state
@@ -109,7 +110,7 @@ const Navbar = () => {
                 >
                   {placeholders.concat(placeholders).map((item, i) => (
                     <p key={i} className="text-primary h-5">
-                      "{item}"
+                      " {item} "
                     </p>
                   ))}
                 </div>
