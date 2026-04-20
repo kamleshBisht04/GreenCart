@@ -8,8 +8,6 @@
   font-family: "Outfit", "Poppins", "Geist", sans-serif;
 }
 
-
-
 @theme {
   --color-primary: #4fbf8b;
   --color-primary-dull: #44ae7c;
@@ -24,6 +22,10 @@
   button {
     @apply cursor-pointer;
   }
+}
+
+@utility bg-app-gradient {
+  @apply bg-gradient-to-br from-green-100 via-white to-green-50;
 }
 
 /* index.css */

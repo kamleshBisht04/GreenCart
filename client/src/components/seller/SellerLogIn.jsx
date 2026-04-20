@@ -21,7 +21,7 @@ const SellerLogIn = () => {
 
   return (
     !isSeller && (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-100 via-white to-green-50 px-4">
+      <div className="bg-app-gradient flex min-h-screen items-center justify-center px-4">
         <IoChevronBackCircleOutline
           className="relative h-8 w-8 cursor-pointer"
           onClick={() => navigate("/")}

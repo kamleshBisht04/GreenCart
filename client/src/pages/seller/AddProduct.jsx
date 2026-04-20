@@ -34,13 +34,15 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="no-scrollbar flex h-[95vh] flex-1 flex-col justify-between overflow-y-scroll">
+    <div className="no-scrollbar flex h-[95vh] flex-1  flex-col justify-between overflow-y-scroll">
       <form
         onSubmit={onSubmitHandler}
         className="max-w-lg space-y-5 p-4 md:p-10"
       >
         <div>
-          <p className="text-base font-medium">Product Image</p>
+          <p className="text-lg font-medium">Product Image</p>
+          <div className="bg-primary mb-4 h-0.5 w-30 rounded-full"></div>
+
           <div className="mt-2 flex flex-wrap items-center gap-3">
             {Array(4)
               .fill("")
