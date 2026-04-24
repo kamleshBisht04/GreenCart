@@ -13,6 +13,7 @@ const allowedOrigins = ['https://localhost:5173'];
 // Middelewere configuration
 app.use(express.json());
 app.use(cookieParser());
+
 app.use(cors({ origin: allowedOrigins, Credential: true }));
 
 app.get('/', (req, res) => res.send('API is Working!!!'));
