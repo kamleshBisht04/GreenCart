@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 
 //Generate token
 const generateToken = (id) => {
-  return jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: '7d',
   });
 };
@@ -44,7 +44,7 @@ export const registerUser = async (req, res) => {
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     // Response
@@ -63,7 +63,7 @@ export const registerUser = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: 'Server error',
+      message: error.message,
     });
   }
 };
