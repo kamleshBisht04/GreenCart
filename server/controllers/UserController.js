@@ -124,8 +124,6 @@ export const login = async (req, res) => {
 
 // check Auth: /api/user/is-auth
 
-
-
 export const isAuth = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
@@ -153,15 +151,15 @@ export const logout = async (req, res) => {
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Logged Out',
     });
   } catch (error) {
     console.log(error.message);
-    res.status(401).json({
+    return res.status(500).json({
       success: false,
-      messanger: error.message,
+      message: error.message,
     });
   }
 };
