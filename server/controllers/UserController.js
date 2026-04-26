@@ -71,45 +71,53 @@ export const registerUser = async (req, res) => {
 // Login User :/api/user/login
 
 export const login = async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  if (!email || !password)
-    return res.status(400).json({
-      success: false,
-      message: 'Email and password are required',
+    if (!email || !password)
+      return res.status(400).json({
+        success: false,
+        message: 'Email and password are required',
+      });
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid email or password',
+      });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch)
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid email or password',
+      });
+
+    const token = generateToken(user._id);
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    return res.status(400).json({
+    return res.json({
+      success: true,
+      user: {
+        email: user.email,
+        name: user.name,
+      },
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({
       success: false,
-      message: 'Invalid email or password',
+      message: error.message,
     });
   }
-
-  const isMatch = await bcrypt.compare(password, user.password);
-
-  if (!isMatch)
-    return res.status(400).json({
-      success: false,
-      message: 'Invalid email or password',
-    });
-
-  const token = generateToken(user._id);
-
-  res.cookie('token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
-
-  return res.json({
-    success: true,
-    user: {
-      email: user.email,
-      name: user.name,
-    },
-  });
 };
