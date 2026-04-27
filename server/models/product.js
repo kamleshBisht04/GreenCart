@@ -40,7 +40,7 @@ const productSchema = new mongoose.Schema(
             required: true,
             validate: {
               validator: function (value) {
-                return value <= this.get('price');
+                return value <= this.parent().price;
               },
               message: 'offer price must be <= price',
             },
