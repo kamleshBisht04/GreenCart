@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import generateToken from '../utils/generateToken.js';
 
 // Login Seller : /api/seller/login
 
@@ -17,15 +17,29 @@ export const sellerLogin = (req, res) => {
       email !== process.env.SELLER_EMAIL ||
       password !== process.env.SELLER_PASSWORD
     ) {
-      res.status(401).json({
+      return res.status(401).json({
         success: false,
         message: 'Invalid credentials',
       });
     }
-
     // create token
+    const token = generateToken({ email, role: 'seller' });
 
+    res.cookie('sellerToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
-    
-  } catch (error) {}
+    return res.status(200).json({
+      success: true,
+      message: 'Seller login successful',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
