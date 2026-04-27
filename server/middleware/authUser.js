@@ -33,7 +33,6 @@ const isAuth = async (req, res, next) => {
         message: 'Invalid Token',
       });
     }
-
     //User attach
     req.user = { id: decoded.id };
 

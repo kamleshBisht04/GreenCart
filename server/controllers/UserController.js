@@ -1,13 +1,6 @@
 import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-
-//Generate token
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: '7d',
-  });
-};
+import generateToken from '../utils/gentateToken.js';
 
 // Register User : /api/user/register
 export const registerUser = async (req, res) => {
@@ -38,7 +31,7 @@ export const registerUser = async (req, res) => {
       password: hashedPassword,
     });
     // Generate token
-    const token = generateToken(user._id);
+    const token = generateToken({ id: user._id });
 
     // send cookie
     res.cookie('token', token, {
@@ -68,7 +61,7 @@ export const registerUser = async (req, res) => {
   }
 };
 
-// Login User :/api/user/login
+// **** Login User :/api/user/login
 
 export const login = async (req, res) => {
   try {
@@ -97,7 +90,7 @@ export const login = async (req, res) => {
         message: 'Invalid email or password',
       });
 
-    const token = generateToken(user._id);
+    const token = generateToken({ id: user._id });
 
     res.cookie('token', token, {
       httpOnly: true,
@@ -122,7 +115,7 @@ export const login = async (req, res) => {
   }
 };
 
-// check Auth: /api/user/is-auth
+//**** */ check Auth: /api/user/is-auth
 
 export const isAuth = async (req, res) => {
   try {
