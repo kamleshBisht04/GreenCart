@@ -43,3 +43,35 @@ export const sellerLogin = (req, res) => {
     });
   }
 };
+
+// Seller isAuth : /api/seller/is-auth
+
+export const isSellerAuth = (req, res) => {
+  return res.status(200).json({
+    success: true,
+    message: 'Seller is authenticated',
+    user: req.user,
+  });
+};
+
+// Seller logout : /api/seller/logout
+
+export const sellerLogout = (req, res) => {
+  try {
+    res.clearCookie('sellerToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Seller logged out successfully',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
