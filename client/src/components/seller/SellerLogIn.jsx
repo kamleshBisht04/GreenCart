@@ -5,13 +5,12 @@ import { IoChevronBackCircleOutline } from 'react-icons/io5';
 import toast from 'react-hot-toast';
 
 const SellerLogIn = () => {
-  const { isSeller, setIsSeller, navigate, axios } = useAppContext();
+  const { isSeller, setIsSeller, navigate, axios  } = useAppContext();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
-
     try {
       const { data } = await axios.post('/api/seller/login', {
         email,

@@ -1,22 +1,35 @@
-import { Link, NavLink, Outlet } from "react-router-dom";
-import { assets } from "../../assets/assets";
-import { useAppContext } from "../../context/AppContext";
+import { Link, NavLink, Outlet } from 'react-router-dom';
+import { assets } from '../../assets/assets';
+import { useAppContext } from '../../context/AppContext';
+import toast from 'react-hot-toast';
 
 const SellerLayout = () => {
-  const { setIsSeller } = useAppContext();
+  const { setIsSeller, axios, navigate} = useAppContext();
 
   const sidebarLinks = [
-    { name: "Add Product", path: "/seller", icon: assets.add_icon },
+    { name: 'Add Product', path: '/seller', icon: assets.add_icon },
     {
-      name: "Product List",
-      path: "/seller/product-list",
+      name: 'Product List',
+      path: '/seller/product-list',
       icon: assets.product_list_icon,
     },
-    { name: "Orders", path: "/seller/orders", icon: assets.order_icon },
+    { name: 'Orders', path: '/seller/orders', icon: assets.order_icon },
   ];
 
   const logout = async () => {
-    setIsSeller(false);
+    try {
+      const { data } = await axios.post('/api/seller/logout');
+
+      if (data.success) {
+        setIsSeller(false); 
+        toast.success('Logged out successfully');
+        navigate('/');
+      } else {
+        toast.error(data.message || 'Logout failed');
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message);
+    }
   };
 
   return (
@@ -47,12 +60,12 @@ const SellerLayout = () => {
             <NavLink
               to={item.path}
               key={item.name}
-              end={item.path === "/seller"}
+              end={item.path === '/seller'}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 ${
                   isActive
-                    ? "border-primary bg-primary/10 text-primary border-r-4 md:border-r-[6px]"
-                    : "border-white hover:bg-gray-100/90"
+                    ? 'border-primary bg-primary/10 text-primary border-r-4 md:border-r-[6px]'
+                    : 'border-white hover:bg-gray-100/90'
                 }`
               }
             >
