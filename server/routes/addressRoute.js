@@ -1,10 +1,11 @@
 import express from 'express';
-import authUser from '../middlewares/authUser.js'; // Authentication middleware (ensure user is logged in)
+ // Authentication middleware (ensure user is logged in)
 import {
   addAddress,
   getAddresses,
   deleteAddress,
 } from '../controllers/addressController.js';
+import authUser from '../middleware/authUser.js';
 
 const addressRouter = express.Router();
 
