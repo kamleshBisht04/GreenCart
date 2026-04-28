@@ -78,7 +78,30 @@ export const productList = async (req, res) => {
 
 // Get single product : /api/product/id
 
-export const productById = async (req, res) => {};
+export const productById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      product,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 // Get product inStock : /api/product/stock
 
