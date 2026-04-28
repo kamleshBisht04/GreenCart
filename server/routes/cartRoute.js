@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
-import authUser from '../middleware/authUser';
+import authUser from '../middleware/authUser.js';
 import {
   getCart,
   removeFromCart,
   updateCart,
-} from '../controllers/cartController';
+} from '../controllers/cartController.js';
 
 const cartRouter = mongoose.Router();
 

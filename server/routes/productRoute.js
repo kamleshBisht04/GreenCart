@@ -1,6 +1,6 @@
 import express from 'express';
-import upload from '../configs/multer';
-import authSeller from '../middleware/authSeller';
+import upload from '../configs/multer.js';
+import authSeller from '../middleware/authSeller.js';
 import {
   addProduct,
   changeStock,

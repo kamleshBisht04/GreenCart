@@ -8,6 +8,7 @@ import { connect } from 'mongoose';
 import connectCloudinary from './configs/cloudinary.js';
 import productRoucter from './routes/productRoute.js';
 import cartRouter from './routes/cartRoute.js';
+import addressRouter from './routes/addressRoute.js';
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -29,6 +30,7 @@ app.use('/api/user', userRouter);
 app.use('/api/seller', sellerRouter);
 app.use('/api/product', productRoucter);
 app.use('/api/cart', cartRouter);
+app.use('/api/address', addressRouter);
 
 app.listen(port, () => {
   console.log(`Server is runing on http://localhost:${port}`);
