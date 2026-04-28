@@ -7,65 +7,61 @@ const productSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+
     category: {
       type: String,
       required: true,
+      trim: true,
     },
-    image: {
+
+    price: {
+      type: Number,
+      required: true,
+    },
+
+    offerPrice: {
+      type: Number,
+      required: true,
+      validate: {
+        validator: function (value) {
+          return value <= this.price;
+        },
+        message: 'Offer price must be <= price',
+      },
+    },
+
+    images: {
       type: [String],
       required: true,
       validate: [(val) => val.length > 0, 'At least one image required'],
     },
 
-    //varient
-    variants: {
-      type: [
-        {
-          _id: false,
-          quantity: {
-            type: Number,
-            required: true,
-          },
-          unit: {
-            type: String,
-            enum: ['g', 'kg', 'ml', 'l'],
-            required: true,
-          },
-          price: {
-            type: Number,
-            required: true,
-          },
-          offerPrice: {
-            type: Number,
-            required: true,
-            validate: {
-              validator: function (value) {
-                return value <= this.parent().price;
-              },
-              message: 'offer price must be <= price',
-            },
-          },
-          inStock: {
-            type: Boolean,
-            default: true,
-          },
-        },
-      ],
-      validate: [(val) => val.length > 0, 'At least one variant required'],
+    description: {
+      type: [String],
+      required: true,
+      validate: [(val) => val.length > 0, 'Description required'],
     },
+
     rating: {
       type: Number,
       default: 0,
       min: 0,
       max: 5,
     },
+
     reviews: {
       type: Number,
       default: 0,
     },
-    description: [String],
+
+    inStock: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true },
 );
 
-export default mongoose.model('Product', productSchema);
+const Product = mongoose.models.Product || mongoose.model('Product',productSchema);
+
+export default Product;
