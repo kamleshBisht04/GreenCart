@@ -1,21 +1,41 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
-import { useAppContext } from "../../context/AppContext";
-import { IoChevronBackCircleOutline } from "react-icons/io5";
+import { useEffect, useState } from 'react';
+import { useAppContext } from '../../context/AppContext';
+import { IoChevronBackCircleOutline } from 'react-icons/io5';
+import toast from 'react-hot-toast';
 
 const SellerLogIn = () => {
-  const { isSeller, setIsSeller, navigate } = useAppContext();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { isSeller, setIsSeller, navigate, axios } = useAppContext();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const onSubmitHandler = async (e) => {
-    e.preventDefault();
-    setIsSeller(true);
+  const onSubmitHandler = async (event) => {
+    event.preventDefault();
+
+    try {
+      const { data } = await axios.post('/api/seller/login', {
+        email,
+        password,
+      });
+
+      if (data.success) {
+        setIsSeller(true);
+        navigate('/seller');
+      } else {
+        toast.error(data.message || 'Login failed');
+      }
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          error.message ||
+          'Something went wrong',
+      );
+    }
   };
 
   useEffect(() => {
     if (isSeller) {
-      navigate("/seller");
+      navigate('/seller');
     }
   }, [isSeller]);
 
@@ -24,7 +44,7 @@ const SellerLogIn = () => {
       <div className="bg-app-gradient flex min-h-screen items-center justify-center px-4">
         <IoChevronBackCircleOutline
           className="relative h-8 w-8 cursor-pointer"
-          onClick={() => navigate("/")}
+          onClick={() => navigate('/')}
         />
         <form
           onSubmit={onSubmitHandler}

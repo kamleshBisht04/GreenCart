@@ -1,14 +1,18 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { dummyProducts } from "../assets/assets";
-import toast from "react-hot-toast";
+import { createContext, useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { dummyProducts } from '../assets/assets';
+import toast from 'react-hot-toast';
+import axios from 'axios';
+
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 
 export const AppContext = createContext();
 
 export const AppContextProvider = ({ children }) => {
-  const currency = import.meta.env.VITE_CURRENCY || "₹";
+  const currency = import.meta.env.VITE_CURRENCY || '₹';
 
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -16,8 +20,21 @@ export const AppContextProvider = ({ children }) => {
   const [showUserLogIn, setShowUserLogIn] = useState(false);
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState({});
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
 
+  // Fetch seller Status
+  const fetchSeller = async () => {
+    try {
+      const { data } = await axios.get('/api/seller/is-auth');
+      if (data.success) {
+        setIsSeller(true);
+      } else {
+        setIsSeller(false);
+      }
+    } catch {
+      setIsSeller(false);
+    }
+  };
 
   // Fetch All Products
   const fetchProducts = async () => {
@@ -25,6 +42,7 @@ export const AppContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    fetchSeller();
     fetchProducts();
   }, []);
 
@@ -36,7 +54,7 @@ export const AppContextProvider = ({ children }) => {
 
       return update;
     });
-    toast.success("Item added to cart 🛒");
+    toast.success('Item added to cart 🛒');
   };
 
   // Remove from cart (decrease/delete).
@@ -121,6 +139,7 @@ export const AppContextProvider = ({ children }) => {
     getTotalAmount,
     searchQuery,
     setSearchQuery,
+    axios,
   };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
@@ -129,7 +148,7 @@ export const useAppContext = () => {
   const context = useContext(AppContext);
 
   if (!context) {
-    throw new Error("useAppContext must be used within AppProvider");
+    throw new Error('useAppContext must be used within AppProvider');
   }
   return context;
 };
