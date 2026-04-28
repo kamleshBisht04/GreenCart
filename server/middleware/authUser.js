@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const isAuth = async (req, res, next) => {
+const authUser = async (req, res, next) => {
   try {
     let token;
 
@@ -47,4 +47,4 @@ const isAuth = async (req, res, next) => {
   }
 };
 
-export default isAuth;
+export default authUser;
