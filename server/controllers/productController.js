@@ -4,8 +4,10 @@ import { v2 as cloudinary } from 'cloudinary';
 // Add product : /api/product/add
 export const addProduct = async (req, res) => {
   try {
+    const productData = JSON.parse(req.body.productData);
+
     const { name, category, price, offerPrice, description, inStock } =
-      req.body;
+      productData;
 
     const images = req.files;
 
@@ -24,7 +26,7 @@ export const addProduct = async (req, res) => {
       });
     }
 
-    // upload images to cloudinary
+    // upload images
     const imageUrls = await Promise.all(
       images.map(async (file) => {
         const result = await cloudinary.uploader.upload(file.path, {
@@ -34,24 +36,24 @@ export const addProduct = async (req, res) => {
       }),
     );
 
-    // create product
     const product = await Product.create({
       name,
       category,
-      price,
-      offerPrice,
-      description: JSON.parse(description),
+      price: Number(price),
+      offerPrice: Number(offerPrice),
+      description,
       images: imageUrls,
       inStock,
     });
 
-    return res.status(201).json({
+    res.status(201).json({
       success: true,
       message: 'Product added successfully',
       product,
     });
   } catch (error) {
-    return res.status(500).json({
+    console.log(error);
+    res.status(400).json({
       success: false,
       message: error.message,
     });
