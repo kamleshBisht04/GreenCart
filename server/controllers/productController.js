@@ -1,8 +1,28 @@
 import Product from '../models/Product.js';
 import { v2 as cloudinary } from 'cloudinary';
 
-// Add product : /api/product/add
+// CLOUDINARY UPLOAD FUNCTION
+const uploadToCloudinary = (fileBuffer) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { resource_type: 'image' },
+      (error, result) => {
+        if (error) {
+          console.log('CLOUDINARY ERROR:', error);
+          return reject(error);
+        }
+        resolve(result.secure_url);
+      },
+    );
+
+    stream.end(fileBuffer);
+  });
+};
+
+// ADD PRODUCT
 export const addProduct = async (req, res) => {
+  console.log('FILES:', req.files);
+
   try {
     const productData = JSON.parse(req.body.productData);
 
@@ -26,16 +46,12 @@ export const addProduct = async (req, res) => {
       });
     }
 
-    // upload images
+    // UPLOAD IMAGES TO CLOUDINARY
     const imageUrls = await Promise.all(
-      images.map(async (file) => {
-        const result = await cloudinary.uploader.upload(file.path, {
-          resource_type: 'image',
-        });
-        return result.secure_url;
-      }),
+      images.map((file) => uploadToCloudinary(file.buffer)),
     );
 
+    // SAVE PRODUCT
     const product = await Product.create({
       name,
       category,
@@ -52,16 +68,15 @@ export const addProduct = async (req, res) => {
       product,
     });
   } catch (error) {
-    console.log(error);
-    res.status(400).json({
+    console.log('ADD PRODUCT ERROR:', error);
+    res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
 
-// Get product : /api/product/list
-
+// GET ALL PRODUCTS
 export const productList = async (req, res) => {
   try {
     const products = await Product.find().sort({ createdAt: -1 });
@@ -78,8 +93,8 @@ export const productList = async (req, res) => {
   }
 };
 
-// Get single product : /api/product/id
 
+// GET PRODUCT BY ID
 export const productById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -105,12 +120,12 @@ export const productById = async (req, res) => {
   }
 };
 
-// Get product inStock : /api/product/stock
 
+// CHANGE STOCK
 export const changeStock = async (req, res) => {
   try {
-    const { id } = req.params; 
-    const { inStock } = req.body; 
+    const { id } = req.params;
+    const { inStock } = req.body;
 
     const product = await Product.findByIdAndUpdate(
       id,
@@ -138,8 +153,9 @@ export const changeStock = async (req, res) => {
   }
 };
 
-// update price 
-
+// ==========================
+// UPDATE PRICE
+// ==========================
 export const updatePrice = async (req, res) => {
   try {
     const { id } = req.params;
@@ -148,7 +164,7 @@ export const updatePrice = async (req, res) => {
     const product = await Product.findByIdAndUpdate(
       id,
       { price, offerPrice },
-      { new: true }
+      { new: true },
     );
 
     if (!product) {

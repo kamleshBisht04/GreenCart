@@ -11,7 +11,7 @@ import {
 
 const productRoucter = express.Router();
 
-productRoucter.post('/add', upload.array('images'), authSeller, addProduct);
+productRoucter.post('/add', authSeller, upload.array('images'), addProduct);
 productRoucter.get('/list', productList);
 productRoucter.get('/:id', productById);
 productRoucter.patch('/stock/:id', authSeller, changeStock);
