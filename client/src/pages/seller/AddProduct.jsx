@@ -1,16 +1,21 @@
-import { useState } from "react";
-import { assets, categories } from "../../assets/assets";
+import { useState } from 'react';
+import { assets, categories } from '../../assets/assets';
+
+import toast from 'react-hot-toast';
+import { useAppContext } from '../../context/AppContext';
+
+const initialState = {
+  name: '',
+  description: '',
+  category: '',
+  price: '',
+  offerPrice: '',
+  images: [],
+};
 
 const AddProduct = () => {
-  const [product, setproduct] = useState({
-    name: "",
-    description: "",
-    category: "",
-    price: "",
-    offerPrice: "",
-    weight: "",
-    images: [],
-  });
+  const [product, setproduct] = useState(initialState);
+  const { axios,fetchProducts  } = useAppContext();
 
   const handleImageChange = (e, index) => {
     const file = e.target.files[0];
@@ -31,10 +36,47 @@ const AddProduct = () => {
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    try {
+      const { name, description, category, price, offerPrice, images } =
+        product;
+
+        if (images.length === 0 || !images.some((img) => img)) {
+          return toast.error('Please upload at least one image');
+        }
+
+      const productData = {
+        name,
+        description: description ? description.split('\n') : [],
+        category,
+        price,
+        offerPrice,
+      };
+
+      const formData = new FormData();
+
+      formData.append('productData', JSON.stringify(productData));
+
+      images.forEach((img) => {
+        if (img) {
+          formData.append('images', img);
+        }
+      });
+      //API CALL
+      const { data } = await axios.post('/api/product/add', formData);
+      fetchProducts(); 
+      if (data.success) {
+        toast.success(data.message);
+        setproduct(initialState);
+      } else {
+        toast.error(data.message || 'Something wrong');
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message);
+    }
   };
 
   return (
-    <div className="no-scrollbar flex h-[95vh] flex-1  flex-col justify-between overflow-y-scroll">
+    <div className="no-scrollbar flex h-[95vh] flex-1 flex-col justify-between overflow-y-scroll">
       <form
         onSubmit={onSubmitHandler}
         className="max-w-lg space-y-5 p-4 md:p-10"
@@ -45,7 +87,7 @@ const AddProduct = () => {
 
           <div className="mt-2 flex flex-wrap items-center gap-3">
             {Array(4)
-              .fill("")
+              .fill('')
               .map((_, index) => (
                 <label key={index} htmlFor={`image${index}`}>
                   <input
@@ -80,7 +122,7 @@ const AddProduct = () => {
             value={product.name}
             id="product-name"
             type="text"
-            placeholder="Type here"
+            placeholder="name with quantity"
             className="rounded border border-gray-500/40 px-3 py-2 outline-none md:py-2.5"
             required
           />
@@ -146,21 +188,6 @@ const AddProduct = () => {
               onChange={handleChange}
               value={product.offerPrice}
               id="offer-price"
-              type="number"
-              placeholder="0"
-              className="rounded border border-gray-500/40 px-3 py-2 outline-none md:py-2.5"
-              required
-            />
-          </div>
-          <div className="flex w-32 flex-1 flex-col gap-1">
-            <label className="text-base font-medium" htmlFor="weight">
-              Weight
-            </label>
-            <input
-              name="weight"
-              onChange={handleChange}
-              value={product.weight}
-              id="weight"
               type="number"
               placeholder="0"
               className="rounded border border-gray-500/40 px-3 py-2 outline-none md:py-2.5"

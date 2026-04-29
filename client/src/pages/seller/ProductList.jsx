@@ -2,7 +2,7 @@ import React from "react";
 import { useAppContext } from "../../context/AppContext";
 
 const ProductList = () => {
-  const { products, currency } = useAppContext();
+  const { products, currency} = useAppContext();
 
   return (
     <div className="flex flex-1 flex-col justify-between">
@@ -31,7 +31,7 @@ const ProductList = () => {
                   <td className="flex items-center gap-3 px-4 py-3">
                     <div className="overflow-hidden rounded border">
                       <img
-                        src={product?.image[0]}
+                        src={product?.images[0]}
                         alt="product"
                         className="w-16"
                       />
