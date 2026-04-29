@@ -25,7 +25,7 @@ const ProductDetails = () => {
     return <div className="mt-20 text-center">Loading...</div>;
   }
 
-  const displayImage = thumbnail || product.image?.[0];
+  const displayImage = thumbnail || product.images?.[0];
 
   const discount = Math.round(
     ((product.price - product.offerPrice) / product.price) * 100,
@@ -50,7 +50,7 @@ const ProductDetails = () => {
         <div className="flex flex-col-reverse gap-4 sm:flex-row">
           {/* Thumbnails */}
           <div className="flex flex-row gap-3 sm:flex-col">
-            {product.image?.map((img, i) => (
+            {product.images?.map((img, i) => (
               <img
                 key={i}
                 src={img}

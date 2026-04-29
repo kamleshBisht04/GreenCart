@@ -73,6 +73,7 @@ const SellerLogIn = () => {
             <input
               onChange={(e) => setPassword(e.target.value)}
               value={password}
+              autoComplete="off"
               placeholder="••••••••"
               className="focus:border-primary focus:ring-primary mt-1 w-full rounded-md border border-gray-300 p-2 outline-none focus:ring-1"
               type="password"
