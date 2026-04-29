@@ -1,31 +1,32 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
-import { assets } from "../assets/assets";
-import { useAppContext } from "../context/AppContext";
+import { useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { assets } from '../assets/assets';
+import { useAppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
 
   const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "All Products", path: "/products" },
-    { name: "Contact", path: "/contact" },
-    { name: "Admin", path: "/seller" },
+    { name: 'Home', path: '/' },
+    { name: 'All Products', path: '/products' },
+    { name: 'Contact', path: '/contact' },
+    { name: 'Admin', path: '/seller' },
   ];
 
   // animated placeholder state
   const placeholders = [
-    "Apple",
-    "Banana",
-    "Amul Milk",
-    "Basmati Rice",
-    "Wheat Flour",
-    "Paneer",
-    "Eggs",
-    "Pepsi",
-    "Coca-Cola",
+    'Apple',
+    'Banana',
+    'Amul Milk',
+    'Basmati Rice',
+    'Wheat Flour',
+    'Paneer',
+    'Eggs',
+    'Pepsi',
+    'Coca-Cola',
   ];
 
   const {
@@ -36,19 +37,29 @@ const Navbar = () => {
     setSearchQuery,
     searchQuery,
     getTotalItems,
+    axios,
   } = useAppContext();
 
   const totalItems = getTotalItems();
 
   const logout = async () => {
-    setUser(null);
-    navigate("/");
+    try {
+      const { data } = await axios.post('/api/user/logout');
+      if (data.success) {
+        toast.success(data.message);
+        setUser(null);
+        navigate('/');
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
-
   //  search navigate
   useEffect(() => {
     if (searchQuery?.trim()) {
-      navigate("/products");
+      navigate('/products');
     }
   }, [searchQuery]);
 
@@ -77,7 +88,7 @@ const Navbar = () => {
               to={link.path}
               className={({ isActive }) =>
                 `rounded-full decoration-[2px] underline-offset-4 transition ${
-                  isActive ? "text-primary " : "hover:text-primary "
+                  isActive ? 'text-primary ' : 'hover:text-primary '
                 }`
               }
             >
@@ -124,7 +135,7 @@ const Navbar = () => {
         {/* Cart */}
         <div
           className="relative cursor-pointer"
-          onClick={() => navigate("/cart")}
+          onClick={() => navigate('/cart')}
         >
           <img
             src={assets.nav_cart_icon}
@@ -151,7 +162,7 @@ const Navbar = () => {
             <img src={assets.profile_icon} className="w-10" alt="profile" />
             <ul className="absolute top-10 right-0 hidden w-30 rounded-md border bg-white py-2.5 text-sm shadow group-hover:block">
               <li
-                onClick={() => navigate("my-orders")}
+                onClick={() => navigate('my-orders')}
                 className="hover:bg-primary/10 cursor-pointer p-1.5 pl-3"
               >
                 My Order
@@ -169,7 +180,7 @@ const Navbar = () => {
 
       {/* Mobile */}
       <div className="flex items-center gap-6 sm:hidden">
-        <div onClick={() => navigate("/cart")} className="relative">
+        <div onClick={() => navigate('/cart')} className="relative">
           <img src={assets.nav_cart_icon} className="w-6" />
           {totalItems > 0 && (
             <button className="bg-primary absolute -top-2 -right-3 h-[18px] w-[18px] rounded-full text-xs text-white">
