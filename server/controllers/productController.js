@@ -109,8 +109,8 @@ export const productById = async (req, res) => {
 
 export const changeStock = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { inStock } = req.body;
+    const { id } = req.params; 
+    const { inStock } = req.body; 
 
     const product = await Product.findByIdAndUpdate(
       id,
@@ -128,6 +128,39 @@ export const changeStock = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Stock updated successfully',
+      product,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// update price 
+
+export const updatePrice = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { price, offerPrice } = req.body;
+
+    const product = await Product.findByIdAndUpdate(
+      id,
+      { price, offerPrice },
+      { new: true }
+    );
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Price updated successfully',
       product,
     });
   } catch (error) {

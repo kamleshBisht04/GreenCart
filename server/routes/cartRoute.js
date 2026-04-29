@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import express from 'express';
 import authUser from '../middleware/authUser.js';
 import {

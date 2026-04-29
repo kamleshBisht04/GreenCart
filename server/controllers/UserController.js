@@ -2,7 +2,6 @@ import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
 import generateToken from '../utils/generateToken.js';
 
-
 // Register User : /api/user/register
 export const registerUser = async (req, res) => {
   try {
