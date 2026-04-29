@@ -1,18 +1,35 @@
-import { useState } from "react";
-import { useAppContext } from "../context/AppContext";
+import { useState } from 'react';
+import { useAppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
 
 const Login = () => {
-  const [state, setState] = useState("login");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [state, setState] = useState('login');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const { setShowUserLogIn, setUser } = useAppContext();
+  const { setShowUserLogIn, setUser, axios, navigate } = useAppContext();
 
-  const onSubmitHandler = (e) => {
-    e.preventDefault();
-    setUser({ name: "kamlesh", email: "kamleshgreencart.com" });
-    setShowUserLogIn(false);
+  const onSubmitHandler = async (e) => {
+    try {
+      e.preventDefault();
+      const { data } = await axios.post(`/api/user/${state}`, {
+        name,
+        email,
+        password,
+      });
+
+      if (data.success) {
+        navigate('/');
+        setUser(data.user);
+        setShowUserLogIn(false);
+        toast.success('Login successful');
+      } else {
+        toast.error(data.message || 'Something went wrong');
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
   };
 
   return (
@@ -35,11 +52,11 @@ const Login = () => {
         </button>
 
         <p className="text-center text-2xl font-semibold">
-          <span className="text-primary">User</span>{" "}
-          {state === "login" ? "Login" : "Sign Up"}
+          <span className="text-primary">User</span>{' '}
+          {state === 'login' ? 'Login' : 'Sign Up'}
         </p>
 
-        {state === "register" && (
+        {state === 'register' && (
           <div>
             <p>Name</p>
             <input
@@ -74,11 +91,11 @@ const Login = () => {
           />
         </div>
 
-        {state === "register" ? (
+        {state === 'register' ? (
           <p>
-            Already have account?{" "}
+            Already have account?{' '}
             <span
-              onClick={() => setState("login")}
+              onClick={() => setState('login')}
               className="text-primary cursor-pointer"
             >
               Login
@@ -86,9 +103,9 @@ const Login = () => {
           </p>
         ) : (
           <p>
-            Create account?{" "}
+            Create account?{' '}
             <span
-              onClick={() => setState("register")}
+              onClick={() => setState('register')}
               className="text-primary cursor-pointer"
             >
               Sign up
@@ -97,7 +114,7 @@ const Login = () => {
         )}
 
         <button className="bg-primary mt-2 w-full rounded py-2 text-white">
-          {state === "register" ? "Create Account" : "Login"}
+          {state === 'register' ? 'Create Account' : 'Login'}
         </button>
       </form>
     </div>
