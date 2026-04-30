@@ -31,7 +31,7 @@ function MyOrders() {
   }, [user]);
 
   return (
-    <div className="mt-10 px-4 pb-10">
+    <div className="mt-24 px-4 pb-10">
       {/* HEADER */}
       <div className="mb-8">
         <h1 className="text-left text-3xl font-semibold text-gray-800">

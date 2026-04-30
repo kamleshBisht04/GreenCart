@@ -7,7 +7,7 @@ const CategoryBar = () => {
   const [active, setActive] = useState("");
 
   return (
-    <div className="w-full overflow-hidden  bg-white">
+    <div className="w-full overflow-hidden mt-20  bg-white">
       <div className="w-full px-4 py-3">
         <div className="scrollbar-hide flex w-max gap-7 overflow-x-auto scroll-smooth">
           {categories.map((cat, index) => (

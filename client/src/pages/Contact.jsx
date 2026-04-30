@@ -2,7 +2,7 @@ import { FaGlobe, FaLinkedin, FaTwitter, FaYoutube } from "react-icons/fa";
 const Contact = () => {
   return (
     <>
-      <section className="bg-white px-4 py-16">
+      <section className="bg-white mt-24 px-4 py-10 ">
         <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 md:grid-cols-3 md:gap-12">
           {/* Left Side */}
           <div className="mt-10 flex flex-col md:col-span-2">

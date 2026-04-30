@@ -20,7 +20,7 @@ const AllProducts = () => {
  }, [searchQuery, products]);
 
   return (
-    <div className="mt-10 px-4 md:px-8">
+    <div className="mt-24 px-4 md:px-8">
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-end justify-between">

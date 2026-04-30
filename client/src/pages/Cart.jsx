@@ -109,7 +109,7 @@ const Cart = () => {
   }, [user]);
 
   return cartArray.length > 0 ? (
-    <div className="mt-12 flex flex-col md:flex-row">
+    <div className="mt-24 flex flex-col md:flex-row">
       {/* LEFT */}
       <div className="max-w-4xl flex-1">
         <h1 className="mb-6 text-3xl font-medium">

@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { useAppContext } from "../context/AppContext";
-import { useParams } from "react-router-dom";
-import { assets } from "../assets/assets.js";
-import ProductCard from "../components/ProductCard";
-import Breadcrumb from "../components/Breadcrumb";
+import { useState } from 'react';
+import { useAppContext } from '../context/AppContext';
+import { useParams } from 'react-router-dom';
+import { assets } from '../assets/assets.js';
+import ProductCard from '../components/ProductCard';
+import Breadcrumb from '../components/Breadcrumb';
 
 const ProductDetails = () => {
   const {
@@ -56,7 +56,7 @@ const ProductDetails = () => {
                 src={img}
                 onClick={() => setThumbnail(img)}
                 className={`h-16 w-16 cursor-pointer rounded-lg border object-cover transition hover:scale-105 ${
-                  displayImage === img ? "border-primary" : "border-gray-300"
+                  displayImage === img ? 'border-primary' : 'border-gray-300'
                 }`}
               />
             ))}
@@ -66,7 +66,7 @@ const ProductDetails = () => {
           <div className="flex-1 rounded-xl border bg-white p-4">
             <img
               src={displayImage}
-              className="h-[280px] w-full object-contain sm:h-[350px]"
+              className="h-[280px] w-full object-contain sm:h-[350px] md:h-[400px]"
             />
           </div>
         </div>
@@ -78,7 +78,7 @@ const ProductDetails = () => {
           {/* Rating */}
           <div className="mt-2 flex items-center gap-1">
             {Array(5)
-              .fill("")
+              .fill('')
               .map((_, i) => (
                 <img
                   key={i}
@@ -158,7 +158,7 @@ const ProductDetails = () => {
             <button
               onClick={() => {
                 addToCart(product._id);
-                navigate("/cart");
+                navigate('/cart');
               }}
               className="bg-primary hover:bg-primary-dull h-12 flex-1 rounded-lg font-medium text-white"
             >
@@ -189,7 +189,7 @@ const ProductDetails = () => {
 
         <button
           onClick={() => {
-            navigate("/products");
+            navigate('/products');
             scrollTo(0, 0);
           }}
           className="text-primary hover:bg-primary/10 mx-auto mt-10 block rounded-lg border px-8 py-2 text-sm"
@@ -210,7 +210,7 @@ const ProductDetails = () => {
         <button
           onClick={() => {
             addToCart(product._id);
-            navigate("/cart");
+            navigate('/cart');
           }}
           className="bg-primary flex-1 rounded py-2 text-white"
         >

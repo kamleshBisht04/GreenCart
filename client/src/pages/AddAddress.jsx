@@ -49,7 +49,7 @@ const AddAddress = () => {
   }, [user, navigate]);
 
   return (
-    <div className="mt-8 px-4 pb-16 md:px-10">
+    <div className="mt-24 px-4 pb-16 md:px-10">
       {/* HEADING */}
       <p className="text-2xl text-gray-500 md:text-3xl">
         Add Shipping <span className="text-primary font-semibold">Address</span>

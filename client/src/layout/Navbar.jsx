@@ -73,7 +73,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="sticky top-0 z-50 flex items-center justify-between border-b border-gray-300 bg-white/70 px-6 py-4 backdrop-blur-md md:px-16 lg:px-24 xl:px-32">
+    <nav className="fixed top-0 left-0 right-0 z-100 flex items-center justify-between border-b border-gray-300 bg-white/70 px-6 py-4 backdrop-blur-md md:px-16 lg:px-24 xl:px-32">
       {/* Logo */}
       <NavLink to="/" onClick={() => setOpen(false)}>
         <img src={assets.logo} alt="logo" />

@@ -21,10 +21,10 @@ const ProductCard = ({ product }) => {
         navigate(`/products/${product.category.toLowerCase()}/${product._id}`);
         scrollTo(0, 0);
       }}
-      className="group relative w-40  h-[220px] cursor-pointer rounded-xl border border-gray-100 bg-white p-2  shadow-sm transition-all duration-300  hover:shadow-md"
+      className="group relative w-40  h-[230px] cursor-pointer rounded-xl border border-gray-100 bg-white p-2  shadow-sm transition-all duration-300  hover:shadow-md"
     >
       {/* IMAGE */}
-      <div className="relative flex h-[115px] items-center justify-center overflow-hidden rounded-lg bg-gray-50">
+      <div className="relative flex h-[120px] items-center justify-center overflow-hidden rounded-lg bg-gray-50">
         {/* 🔴 OFF BADGE */}
         {discount > 0 && (
           <span

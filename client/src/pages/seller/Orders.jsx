@@ -1,7 +1,7 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 import React, { useEffect, useState } from 'react';
 import { useAppContext } from '../../context/AppContext.jsx';
 import { assets } from '../../assets/assets.js';
+import toast from 'react-hot-toast';
 
 function Orders() {
   const { currency, axios } = useAppContext();
@@ -10,67 +10,101 @@ function Orders() {
   const fetchOrders = async () => {
     try {
       const { data } = await axios.get('/api/order/seller');
-      if (data.success) {
-        setOrders(data.orders); 
-      }
+      if (data.success) setOrders(data.orders);
+      else toast.error(data.message);
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
 
   useEffect(() => {
-    fetchOrders();
+    const loadOrders = async () => {
+      await fetchOrders();
+    };
+    loadOrders();
   }, []);
 
   return (
-    <div className="no-scrollbar h-[95vh] flex-1 overflow-y-scroll">
-      <div className="space-y-4 p-4 md:p-10">
-        <h2 className="text-lg font-medium">Orders List</h2>
+    <div className="h-[95vh] flex-1 overflow-y-scroll bg-white">
+      {/* HEADER */}
+      <div className="px-6 py-6 md:px-10">
+        <h2 className="text-2xl font-medium text-gray-800">Orders</h2>
+        <p className="text-sm text-gray-500">Manage customer orders</p>
+      </div>
 
+      {/* ORDERS */}
+      <div className="space-y-5 px-6 pb-10 md:px-10">
         {orders.map((order, index) => (
           <div
             key={index}
-            className="flex max-w-4xl flex-col justify-between gap-5 rounded-md border border-gray-300 p-5 md:flex-row md:items-center"
+            className="rounded-xl border border-gray-200 bg-white p-5"
           >
-            <div className="flex max-w-80 gap-5">
-              <img
-                className="h-12 w-12 object-cover"
-                src={assets.box_icon}
-                alt="boxIcon"
-              />
-              <div>
-                {order.items.map((item, index) => (
-                  <div key={index} className="flex flex-col">
-                    <p className="font-medium">
-                      {item.product.name}{' '}
-                      <span className="text-primary">x {item.quantity}</span>
+            {/* TOP SECTION */}
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {/* PRODUCTS */}
+              <div className="flex gap-4">
+                <img src={assets.box_icon} className="h-10 w-10" />
+
+                <div className="space-y-1">
+                  {order.items.map((item, i) => (
+                    <p key={i} className="text-sm text-gray-700">
+                      {item.product.name}
+                      <span className="ml-2 text-gray-500">
+                        x {item.quantity}
+                      </span>
                     </p>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              </div>
+
+              {/* ADDRESS */}
+              <div className="text-xs text-gray-600">
+                <p className="text-sm font-medium text-gray-800">
+                  Delivery Address
+                </p>
+                <p>
+                  {order.address.firstName} {order.address.lastName}
+                </p>
+                <p>
+                  {order.address.street}, {order.address.city}
+                </p>
+                <p>
+                  {order.address.state}, {order.address.country} -{' '}
+                  {order.address.zipcode}
+                </p>
+                <p>{order.address.phone}</p>
+              </div>
+
+              {/* AMOUNT + STATUS */}
+              <div className="md:text-right">
+                <p className="text-lg font-medium text-gray-800">
+                  {currency}
+                  {order.amount}
+                </p>
+
+                <p
+                  className={`mt-1 inline-block text-xs font-medium ${
+                    order.isPaid ? 'text-green-600' : 'text-red-500'
+                  }`}
+                >
+                  {order.isPaid ? 'Paid' : 'Pending'}
+                </p>
               </div>
             </div>
-            <div className="text-sm text-black/60 md:text-base">
-              <p className="text-black/80">
-                {order.address.firstName} {order.address.lastName}
-              </p>
+
+            {/* BOTTOM */}
+            <div className="mt-4 flex flex-wrap justify-between border-t pt-3 text-xs text-gray-500">
               <p>
-                {order.address.street}, {order.address.city}{' '}
+                Method:{' '}
+                <span className="text-gray-700">{order.paymentType}</span>
               </p>
+
               <p>
-                {order.address.state}, {order.address.zipcode},{' '}
-                {order.address.country}
+                Date:{' '}
+                <span className="text-gray-700">
+                  {new Date(order.createdAt).toLocaleDateString()}
+                </span>
               </p>
-              <p></p>
-              <p>{order.address.phone}</p>
-            </div>
-            <p className="my-auto text-lg font-medium">
-              {currency}
-              {order.amount}
-            </p>
-            <div className="flex flex-col text-sm text-black/60 md:text-base">
-              <p>Method: {order.paymentType}</p>
-              <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
-              <p>Payment: {order.isPaid ? 'Paid' : 'Pending'}</p>
             </div>
           </div>
         ))}
