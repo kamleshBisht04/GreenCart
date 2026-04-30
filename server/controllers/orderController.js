@@ -44,7 +44,7 @@ export const placeOrderCOD = async (req, res) => {
     const order = await Order.create({
       userId,
       items: items.map((i) => ({
-        product: i.productId, // ⚠️ IMPORTANT FIX (schema match)
+        product: i.productId, //  IMPORTANT FIX (schema match)
         quantity: i.quantity,
       })),
       address,
