@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import { useAppContext } from '../context/AppContext.jsx';
 import toast from 'react-hot-toast';
 
 function MyOrders() {
   const [myOrders, setMyOrders] = useState([]);
-  const { currency, axios } = useAppContext();
+  const { currency, axios, user } = useAppContext();
 
   const fetchMyOrders = async () => {
     try {
@@ -22,11 +23,12 @@ function MyOrders() {
 
   useEffect(() => {
     const loadOrders = async () => {
-      await fetchMyOrders();
+      if (user) {
+        await fetchMyOrders();
+      }
     };
-
     loadOrders();
-  }, []);
+  }, [user]);
 
   return (
     <div className="mt-10 px-4 pb-10">

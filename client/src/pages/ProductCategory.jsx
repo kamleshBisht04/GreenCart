@@ -1,8 +1,8 @@
-import { useParams } from "react-router-dom";
-import { useAppContext } from "../context/AppContext";
-import { categories } from "../assets/assets";
-import ProductCard from "../components/ProductCard";
-import ProgressDots from "../components/ProgressDots";
+import { useParams } from 'react-router-dom';
+import { useAppContext } from '../context/AppContext';
+import { categories } from '../assets/assets';
+import ProductCard from '../components/ProductCard';
+import ProgressDots from '../components/ProgressDots';
 
 const ProductCategory = () => {
   const { products } = useAppContext();
@@ -14,16 +14,17 @@ const ProductCategory = () => {
     (item) => item.path.toLowerCase() === normalizedCategory,
   );
 
-  const filteredProducts = products.filter(
-    (product) => product?.category?.toLowerCase() === normalizedCategory,
-  );
+ const filteredProducts = products.filter(
+   (product) =>
+     product?.category?.toLowerCase() === normalizedCategory &&
+     product?.inStock,
+ );
 
   return (
     <div className="mt-10 px-4">
       {searchCategory && (
         <div className="item-end flex w-max flex-col">
           <p className="text-2xl font-medium">{searchCategory.text}</p>
-
           <ProgressDots />
         </div>
       )}

@@ -1,14 +1,21 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-import React, { useEffect, useState } from "react";
-import { useAppContext } from "../../context/AppContext.jsx";
-import { assets, dummyOrders } from "../../assets/assets.js";
+import React, { useEffect, useState } from 'react';
+import { useAppContext } from '../../context/AppContext.jsx';
+import { assets } from '../../assets/assets.js';
 
 function Orders() {
-  const { currency } = useAppContext();
+  const { currency, axios } = useAppContext();
   const [orders, setOrders] = useState([]);
 
   const fetchOrders = async () => {
-    setOrders(dummyOrders);
+    try {
+      const { data } = await axios.get('/api/order/seller');
+      if (data.success) {
+        setOrders(data.orders); 
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -35,7 +42,7 @@ function Orders() {
                 {order.items.map((item, index) => (
                   <div key={index} className="flex flex-col">
                     <p className="font-medium">
-                      {item.product.name}{" "}
+                      {item.product.name}{' '}
                       <span className="text-primary">x {item.quantity}</span>
                     </p>
                   </div>
@@ -47,10 +54,10 @@ function Orders() {
                 {order.address.firstName} {order.address.lastName}
               </p>
               <p>
-                {order.address.street}, {order.address.city}{" "}
+                {order.address.street}, {order.address.city}{' '}
               </p>
               <p>
-                {order.address.state}, {order.address.zipcode},{" "}
+                {order.address.state}, {order.address.zipcode},{' '}
                 {order.address.country}
               </p>
               <p></p>
@@ -63,7 +70,7 @@ function Orders() {
             <div className="flex flex-col text-sm text-black/60 md:text-base">
               <p>Method: {order.paymentType}</p>
               <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
-              <p>Payment: {order.isPaid ? "Paid" : "Pending"}</p>
+              <p>Payment: {order.isPaid ? 'Paid' : 'Pending'}</p>
             </div>
           </div>
         ))}
