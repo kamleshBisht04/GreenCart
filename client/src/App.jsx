@@ -1,28 +1,28 @@
-import { Toaster } from "react-hot-toast";
-import { Route, Routes, useLocation } from "react-router-dom";
-import { useAppContext } from "./context/AppContext";
+import { Toaster } from 'react-hot-toast';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import { useAppContext } from './context/AppContext';
 
-import Navbar from "./layout/Navbar";
-import Footer from "./layout/Footer";
-import Login from "./components/Login";
+import Navbar from './layout/Navbar';
+import Footer from './layout/Footer';
+import Login from './components/Login';
 
-import Home from "./pages/Home";
-import Contact from "./pages/Contact";
-import AllProducts from "./pages/AllProducts";
-import ProductCategory from "./pages/ProductCategory";
-import ProductDetails from "./pages/ProductDetails";
-import Cart from "./pages/Cart";
-import AddAddress from "./pages/AddAddress";
-import MyOrders from "./pages/MyOrders";
+import Home from './pages/Home';
+import Contact from './pages/Contact';
+import AllProducts from './pages/AllProducts';
+import ProductCategory from './pages/ProductCategory';
+import ProductDetails from './pages/ProductDetails';
+import Cart from './pages/Cart';
+import AddAddress from './pages/AddAddress';
+import MyOrders from './pages/MyOrders';
 
-import SellerLogIn from "./components/seller/SellerLogIn";
-import SellerLayout from "./pages/seller/SellerLayout";
-import AddProduct from "./pages/seller/AddProduct";
-import ProductList from "./pages/seller/ProductList";
-import Orders from "./pages/seller/Orders";
+import SellerLogIn from './components/seller/SellerLogIn';
+import SellerLayout from './pages/seller/SellerLayout';
+import AddProduct from './pages/seller/AddProduct';
+import ProductList from './pages/seller/ProductList';
+import Orders from './pages/seller/Orders';
 
 const App = () => {
-  const isSellerPath = useLocation().pathname.includes("seller");
+  const isSellerPath = useLocation().pathname.includes('seller');
   const { showUserLogIn, isSeller } = useAppContext();
 
   return (
@@ -36,8 +36,8 @@ const App = () => {
         <div
           className={
             isSellerPath
-              ? "flex h-full flex-col"
-              : "px-6 md:px-16 lg:px-24 xl:px-32"
+              ? 'flex h-full flex-col'
+              : 'px-6 md:px-16 lg:px-24 xl:px-32'
           }
         >
           <Routes>
@@ -64,9 +64,8 @@ const App = () => {
             </Route>
           </Routes>
         </div>
-      {!isSellerPath && <Footer />}
+        {!isSellerPath && <Footer />}
       </div>
-
     </div>
   );
 };
