@@ -5,15 +5,19 @@ import ProductCard from "../components/ProductCard";
 const AllProducts = () => {
   const { products, searchQuery } = useAppContext();
 
-  const filteredProducts = useMemo(() => {
-    if (!products) return [];
+ const filteredProducts = useMemo(() => {
+   if (!products) return [];
 
-    const query = String(searchQuery || "").toLowerCase();
+   const query = String(searchQuery || '').toLowerCase();
 
-    return query
-      ? products.filter((product) => product.name.toLowerCase().includes(query))
-      : products;
-  }, [searchQuery, products]);
+   return products.filter((product) => {
+     if (!product.inStock) return false; // hide out of stock
+
+     if (!query) return true;
+
+     return product.name.toLowerCase().includes(query);
+   });
+ }, [searchQuery, products]);
 
   return (
     <div className="mt-10 px-4 md:px-8">
@@ -44,7 +48,7 @@ const AllProducts = () => {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+        <div className="grid grid-cols-2 gap-4 gap-y-10 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
           {filteredProducts.map((product) => (
             <div key={product._id}>
               <ProductCard product={product} />

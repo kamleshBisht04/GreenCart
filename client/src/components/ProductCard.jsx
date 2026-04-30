@@ -21,14 +21,14 @@ const ProductCard = ({ product }) => {
         navigate(`/products/${product.category.toLowerCase()}/${product._id}`);
         scrollTo(0, 0);
       }}
-      className="group relative w-40 cursor-pointer rounded-xl border border-gray-100 bg-white p-2 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+      className="group relative w-40  h-[220px] cursor-pointer rounded-xl border border-gray-100 bg-white p-2 px-3 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
     >
       {/* IMAGE */}
       <div className="relative flex h-28 items-center justify-center overflow-hidden rounded-lg bg-gray-50">
         {/* 🔴 OFF BADGE */}
         {discount > 0 && (
           <span
-            className="absolute top-1 left-1 rounded-md px-1.5 py-0.5 text-[10px] font-semibold text-white shadow-sm"
+            className="absolute top-1 left-1 rounded-md px-1.5 py-0.5 text-[10px] font-semibold text-white shadow-sm z-50"
             style={{ backgroundColor: "#E1F5EC", color: "#1B3C53" }}
           >
             {discount}% OFF
@@ -38,7 +38,7 @@ const ProductCard = ({ product }) => {
         <img
           src={product.images[0]}
           alt={product.name}
-          className="h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-110"
+          className="h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-110 "
         />
 
         {/* ADD BUTTON */}

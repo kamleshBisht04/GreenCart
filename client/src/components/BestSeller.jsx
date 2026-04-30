@@ -5,6 +5,7 @@ const BestSeller = () => {
   const { products } = useAppContext();
 
   const bestRated = [...products]
+    .filter((p) => p.inStock)
     .sort((a, b) => b.rating - a.rating)
     .slice(0, 14);
 
