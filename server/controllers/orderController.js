@@ -1,12 +1,22 @@
 import Product from '../models/Product.js';
 import Order from '../models/Order.js';
 
-// Place Order COD : /api/order/cod
+//  * PLACE ORDER (COD) POST /api/order/cod
+
 export const placeOrderCOD = async (req, res) => {
   try {
-    const { userId, address, items } = req.body;
+    const userId = req.user?.id;
 
-    if (!address || !items || items.length === 0) {
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized user',
+      });
+    }
+
+    const { items, address } = req.body;
+
+    if (!items || items.length === 0 || !address) {
       return res.status(400).json({
         success: false,
         message: 'Invalid data',
@@ -15,36 +25,41 @@ export const placeOrderCOD = async (req, res) => {
 
     let amount = 0;
 
-    // ✅ FIXED calculation (no async reduce)
-    for (let item of items) {
-      const product = await Product.findById(item.product);
+    for (const item of items) {
+      const product = await Product.findById(item.productId);
 
       if (!product) {
         return res.status(404).json({
           success: false,
-          message: 'Product not found',
+          message: `Product not found: ${item.productId}`,
         });
       }
 
       amount += product.offerPrice * item.quantity;
     }
 
-    amount += Math.floor(amount * 0.02); // Tax
+    const tax = Math.floor(amount * 0.02);
+    amount += tax;
 
-    await Order.create({
+    const order = await Order.create({
       userId,
-      items,
-      amount,
+      items: items.map((i) => ({
+        product: i.productId, // ⚠️ IMPORTANT FIX (schema match)
+        quantity: i.quantity,
+      })),
       address,
+      amount,
       paymentType: 'COD',
       isPaid: false,
     });
 
     return res.status(201).json({
       success: true,
-      message: 'Order placed successfully!',
+      message: 'Order placed successfully',
+      order,
     });
   } catch (error) {
+    console.log('ORDER ERROR:', error);
     return res.status(500).json({
       success: false,
       message: error.message,
@@ -52,45 +67,53 @@ export const placeOrderCOD = async (req, res) => {
   }
 };
 
+//  * GET USER ORDERS
+
 export const getUserOrders = async (req, res) => {
   try {
-    const userId = req.userId;
+    const userId = req.user?.id;
 
-    const orders = await Order.find({
-      userId,
-      $or: [{ paymentType: 'COD' }, { isPaid: true }],
-    })
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized user',
+      });
+    }
+
+    const orders = await Order.find({ userId })
       .populate('items.product')
       .populate('address')
       .sort({ createdAt: -1 });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       orders,
     });
   } catch (error) {
-    res.status(500).json({
+    console.log('GET USER ORDERS ERROR:', error);
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
 
+//  GET ALL ORDERS (ADMIN/SELLER)
+
 export const getAllOrder = async (req, res) => {
   try {
-    const orders = await Order.find({
-      $or: [{ paymentType: 'COD' }, { isPaid: true }],
-    })
+    const orders = await Order.find()
       .populate('items.product')
       .populate('address')
       .sort({ createdAt: -1 });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       orders,
     });
   } catch (error) {
-    res.status(500).json({
+    console.log('GET ALL ORDERS ERROR:', error);
+    return res.status(500).json({
       success: false,
       message: error.message,
     });

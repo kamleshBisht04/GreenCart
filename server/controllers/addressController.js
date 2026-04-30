@@ -6,7 +6,6 @@ export const addAddress = async (req, res) => {
     const {
       firstName,
       lastName,
-      email,
       street,
       city,
       state,
@@ -14,13 +13,26 @@ export const addAddress = async (req, res) => {
       country,
       phone,
     } = req.body;
-    const userId = req.user.id; // Authenticated user ID
+
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized',
+      });
+    }
+
+    if (!firstName || !street || !city || !phone) {
+      return res.status(400).json({
+        success: false,
+        message: 'Required fields missing',
+      });
+    }
 
     const address = new Address({
-      userId,
+      userId: req.user.id,
       firstName,
       lastName,
-      email,
+
       street,
       city,
       state,
@@ -68,7 +80,17 @@ export const deleteAddress = async (req, res) => {
   try {
     const { addressId } = req.params;
 
-    await Address.findByIdAndDelete(addressId);
+    const address = await Address.findOneAndDelete({
+      _id: addressId,
+      userId: req.user.id,
+    });
+
+    if (!address) {
+      return res.status(404).json({
+        success: false,
+        message: 'Address not found or unauthorized',
+      });
+    }
 
     res.status(200).json({
       success: true,
