@@ -8,7 +8,6 @@ const uploadToCloudinary = (fileBuffer) => {
       { resource_type: 'image' },
       (error, result) => {
         if (error) {
-          console.log('CLOUDINARY ERROR:', error);
           return reject(error);
         }
         resolve(result.secure_url);
@@ -68,7 +67,6 @@ export const addProduct = async (req, res) => {
       product,
     });
   } catch (error) {
-    console.log('ADD PRODUCT ERROR:', error);
     res.status(500).json({
       success: false,
       message: error.message,
@@ -92,7 +90,6 @@ export const productList = async (req, res) => {
     });
   }
 };
-
 
 // GET PRODUCT BY ID
 export const productById = async (req, res) => {
@@ -119,7 +116,6 @@ export const productById = async (req, res) => {
     });
   }
 };
-
 
 // CHANGE STOCK
 export const changeStock = async (req, res) => {
@@ -153,9 +149,8 @@ export const changeStock = async (req, res) => {
   }
 };
 
-// ==========================
 // UPDATE PRICE
-// ==========================
+
 export const updatePrice = async (req, res) => {
   try {
     const { id } = req.params;
