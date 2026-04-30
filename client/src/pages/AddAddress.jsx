@@ -1,18 +1,21 @@
-import React, { useState } from "react";
-import { assets } from "../assets/assets";
-import InputField from "../components/InputField";
+import React, { useEffect, useState } from 'react';
+import { assets } from '../assets/assets';
+import InputField from '../components/InputField';
+import { useAppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
 
 const AddAddress = () => {
+  const { axios, navigate, user } = useAppContext();
+
   const [address, setAddress] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    street: "",
-    city: "",
-    state: "",
-    zipcode: "",
-    country: "",
-    phone: "",
+    firstName: '',
+    lastName: '',
+    street: '',
+    city: '',
+    state: '',
+    zipcode: '',
+    country: '',
+    phone: '',
   });
 
   const handleChange = (e) => {
@@ -23,19 +26,36 @@ const AddAddress = () => {
     }));
   };
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
+    try {
+      const { data } = await axios.post('/api/address/add', address);
+
+      if (data.success) {
+        toast.success(data.message);
+        navigate('/cart');
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
   };
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
 
   return (
     <div className="mt-8 px-4 pb-16 md:px-10">
       {/* HEADING */}
       <p className="text-2xl text-gray-500 md:text-3xl">
         Add Shipping <span className="text-primary font-semibold">Address</span>
-        <p className="text-sm text-gray-500">Fill your delivery details</p>
       </p>
+      <p className="text-sm text-gray-500">Fill your delivery details</p>
 
-      {/* MAIN LAYOUT */}
       <div className="mt-8 flex flex-col-reverse justify-between gap-10 md:flex-row">
         {/* FORM */}
         <div className="w-full max-w-md flex-1 rounded-lg border-2 border-gray-200 bg-white px-6 py-6">
@@ -57,15 +77,6 @@ const AddAddress = () => {
                 onChange={handleChange}
               />
             </div>
-
-            {/* EMAIL */}
-            <InputField
-              type="email"
-              placeholder="Enter your email"
-              name="email"
-              value={address.email}
-              onChange={handleChange}
-            />
 
             {/* STREET */}
             <InputField
