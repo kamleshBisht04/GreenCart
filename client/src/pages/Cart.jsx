@@ -17,6 +17,7 @@ const Cart = () => {
     getTotalAmount,
     axios,
     user,
+    setCartItems,
   } = useAppContext();
 
   const [addresses, setAddresses] = useState([]);
@@ -93,6 +94,7 @@ const Cart = () => {
         if (data.success) {
           toast.success(data.message);
           navigate('/my-orders');
+          setCartItems({});
         } else {
           toast.error(data.message);
         }

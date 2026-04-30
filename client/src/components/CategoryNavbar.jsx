@@ -32,7 +32,7 @@ const CategoryNavbar = () => {
         {/* 🔥 SCROLL AREA (NO OUTSIDE SCROLLBAR EVER) */}
         <div
           ref={scrollRef}
-          className="scrollbar-hide flex w-full gap-6 overflow-x-auto scroll-smooth px-10 py-3 sm:gap-8 sm:px-14 md:px-16"
+          className="scrollbar-hide flex w-full gap-6 overflow-hidden scroll-smooth px-10 py-3 sm:gap-8 sm:px-14 md:px-16"
         >
           {categories.map((cat, index) => {
             const isActive =

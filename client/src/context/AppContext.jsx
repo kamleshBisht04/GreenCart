@@ -188,6 +188,7 @@ export const AppContextProvider = ({ children }) => {
     setSearchQuery,
     axios,
     fetchProducts,
+    setCartItems,
   };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };;
