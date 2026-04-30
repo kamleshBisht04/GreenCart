@@ -42,7 +42,7 @@ const AddAddress = () => {
     }
   };
 
-  useEffect(() => {
+  useEffect(() => { 
     if (!user) {
       navigate('/login');
     }

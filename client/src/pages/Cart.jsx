@@ -1,6 +1,9 @@
-import { useMemo, useState } from "react";
-import { useAppContext } from "../context/AppContext";
-import { assets, dummyAddress } from "../assets/assets";
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/set-state-in-effect */
+import { useEffect, useMemo, useState } from 'react';
+import { useAppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
+import { assets } from '../assets/assets';
 
 const Cart = () => {
   const {
@@ -12,24 +15,27 @@ const Cart = () => {
     getTotalItems,
     updateCartItem,
     getTotalAmount,
+    axios,
+    user,
   } = useAppContext();
 
-  const [addresses, setAddresses] = useState(dummyAddress);
+  const [addresses, setAddresses] = useState([]);
   const [showAddress, setShowAddress] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState(
-    dummyAddress?.[0] || null,
-  );
-  const [paymentOption, setPaymentOption] = useState("COD");
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [paymentOption, setPaymentOption] = useState('COD');
 
+  // subtotal fix (ensure correct dependency usage)
   const subtotal = useMemo(
     () => getTotalAmount(products),
-    [getTotalAmount, products],
+    [products, getTotalAmount],
   );
+
   const tax = Math.round(subtotal * 0.02);
   const total = subtotal + tax;
 
+  // cart mapping fix
   const cartArray = useMemo(() => {
-    if (products.length === 0) return [];
+    if (!products.length) return [];
 
     const productMap = Object.fromEntries(products.map((p) => [p._id, p]));
 
@@ -41,19 +47,47 @@ const Cart = () => {
       .filter(Boolean);
   }, [products, cartItems]);
 
+  // ✅ fetch addresses
+  const getUserAddress = async () => {
+    try {
+      const { data } = await axios.get('/api/address/get');
+
+      if (data.success) {
+        setAddresses(data.addresses);
+
+        if (data.addresses.length > 0) {
+          setSelectedAddress(data.addresses[0]);
+        } else {
+          setSelectedAddress(null);
+        }
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  
+  useEffect(() => {
+    if (user) {
+      getUserAddress();
+    }
+  }, [user]);
+
   return cartArray.length > 0 ? (
     <div className="mt-12 flex flex-col md:flex-row">
       {/* LEFT */}
       <div className="max-w-4xl flex-1">
         <h1 className="mb-6 text-3xl font-medium">
-          Shopping Cart{" "}
+          Shopping Cart{' '}
           <span className="text-primary-dull text-sm">
             {getTotalItems()} Items
           </span>
         </h1>
 
         <div className="grid grid-cols-[2fr_1fr_1fr] pb-3 text-base font-medium text-gray-500">
-          <p className="text-left">Product Details</p>
+          <p>Product Details</p>
           <p className="text-center">Subtotal</p>
           <p className="text-center">Action</p>
         </div>
@@ -61,50 +95,42 @@ const Cart = () => {
         {cartArray.map((product) => (
           <div
             key={product._id}
-            className="grid grid-cols-[2fr_1fr_1fr] items-center pt-3 text-sm font-medium text-gray-500 md:text-base"
+            className="grid grid-cols-[2fr_1fr_1fr] items-center pt-3 text-sm md:text-base"
           >
-            <div className="flex items-center gap-3 md:gap-6">
+            <div className="flex items-center gap-4">
               <div
                 onClick={() => {
                   navigate(
                     `/products/${product.category.toLowerCase()}/${product._id}`,
                   );
-                  window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
-                className="flex h-24 w-24 cursor-pointer items-center justify-center overflow-hidden rounded border border-gray-300"
+                className="h-24 w-24 cursor-pointer overflow-hidden rounded border"
               >
                 <img
-                  className="h-full max-w-full object-cover"
                   src={product?.images?.[0]}
-                  alt={product.name}
+                  className="h-full w-full object-cover"
                 />
               </div>
 
               <div>
-                <p className="hidden font-semibold md:block">{product.name}</p>
+                <p className="font-semibold">{product.name}</p>
 
-                <div className="font-normal text-gray-500/70">
-                  <p>
-                    Weight: <span>{product.weight || "N/A"}</span>
-                  </p>
+                <div className="text-gray-500">
+                  <p>Weight: {product.weight || 'N/A'}</p>
 
-                  <div className="flex items-center">
+                  <div className="flex items-center gap-1">
                     <p>Qty:</p>
-
                     <select
+                      value={cartItems[product._id]}
                       onChange={(e) =>
                         updateCartItem(product._id, Number(e.target.value))
                       }
-                      value={cartItems[product._id]}
-                      className="outline-none"
                     >
-                      {Array(Math.max(cartItems[product._id], 9))
-                        .fill("")
-                        .map((_, index) => (
-                          <option key={index} value={index + 1}>
-                            {index + 1}
-                          </option>
-                        ))}
+                      {Array.from({ length: 10 }).map((_, i) => (
+                        <option key={i} value={i + 1}>
+                          {i + 1}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -113,47 +139,32 @@ const Cart = () => {
 
             <p className="text-center">
               {currency}
-              {(product?.offerPrice || 0) * product.quantity}
+              {(product.offerPrice || 0) * product.quantity}
             </p>
 
-            <button
-              onClick={() => removeFromCart(product._id)}
-              className="mx-auto cursor-pointer"
-            >
-              <img
-                src={assets.remove_icon}
-                alt="remove icon"
-                className="inline-block h-6 w-6"
-              />
+            <button onClick={() => removeFromCart(product._id)}>
+              <img src={assets.remove_icon} className="h-6 w-6" />
             </button>
           </div>
         ))}
 
         <button
-          onClick={() => {
-            navigate("/products");
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-          className="group text-primary-dull mt-8 flex cursor-pointer items-center gap-2 font-medium"
+          onClick={() => navigate('/products')}
+          className="text-primary mt-8"
         >
-          <img
-            src={assets.arrow_right_icon_colored}
-            className="transition group-hover:-translate-x-1"
-            alt="arrow icon"
-          />
           Continue Shopping
         </button>
       </div>
 
       {/* RIGHT */}
       <div className="mt-10 w-full max-w-sm md:mt-0">
-        <div className="sticky top-20 rounded-2xl bg-white p-6 shadow-md">
-          <h2 className="text-lg font-semibold text-gray-900">Order Summary</h2>
+        <div className="sticky top-20 rounded-2xl bg-white p-6 shadow">
+          <h2 className="text-lg font-semibold">Order Summary</h2>
 
-          <div className="mt-6 space-y-3 text-sm text-gray-600">
+          <div className="mt-4 space-y-2">
             <div className="flex justify-between">
               <span>Subtotal</span>
-              <span className="font-medium">
+              <span>
                 {currency}
                 {subtotal}
               </span>
@@ -161,13 +172,13 @@ const Cart = () => {
 
             <div className="flex justify-between">
               <span>Tax (2%)</span>
-              <span className="font-medium">
+              <span>
                 {currency}
                 {tax}
               </span>
             </div>
 
-            <div className="flex justify-between border-t pt-3 text-base font-semibold text-gray-900">
+            <div className="flex justify-between border-t pt-2 font-semibold">
               <span>Total</span>
               <span>
                 {currency}
@@ -178,44 +189,44 @@ const Cart = () => {
 
           {/* ADDRESS */}
           <div className="mt-6">
-            <p className="text-xs tracking-wider text-gray-400 uppercase">
-              Delivery Address
-            </p>
+            <p className="text-xs text-gray-400 uppercase">Delivery Address</p>
 
-            <div className="mt-2 flex items-center justify-between">
-              <p className="text-sm text-gray-500">
+            <div className="mt-2 flex justify-between">
+              <p className="text-sm text-gray-600">
                 {selectedAddress
                   ? `${selectedAddress.street}, ${selectedAddress.city}, ${selectedAddress.state}, ${selectedAddress.country}`
-                  : "No address found"}
+                  : 'No address found'}
               </p>
 
-              <button
-                onClick={() => setShowAddress(!showAddress)}
-                className="text-primary text-sm hover:underline"
-              >
-                Change
-              </button>
+              {addresses.length > 0 && (
+                <button
+                  onClick={() => setShowAddress(!showAddress)}
+                  className="text-primary text-sm"
+                >
+                  Change
+                </button>
+              )}
             </div>
 
             {showAddress && (
-              <div className="relative z-50 mt-3 overflow-hidden rounded-xl border text-sm">
-                {addresses.map((address, index) => (
+              <div className="mt-2 rounded border text-sm">
+                {addresses.map((address) => (
                   <p
-                    key={index}
+                    key={address._id}
                     onClick={() => {
                       setSelectedAddress(address);
                       setShowAddress(false);
                     }}
                     className="cursor-pointer p-2 hover:bg-gray-100"
                   >
-                    {address.street},{address.city},{address.state},
+                    {address.street}, {address.city}, {address.state},{' '}
                     {address.country}
                   </p>
                 ))}
 
                 <p
-                  onClick={() => navigate("/add-address")}
-                  className="text-primary hover:bg-primary/10 cursor-pointer p-2"
+                  onClick={() => navigate('/add-address')}
+                  className="text-primary p-2"
                 >
                   + Add new address
                 </p>
@@ -225,13 +236,11 @@ const Cart = () => {
 
           {/* PAYMENT */}
           <div className="mt-5">
-            <p className="text-xs tracking-wider text-gray-400 uppercase">
-              Payment Method
-            </p>
+            <p className="text-xs text-gray-400 uppercase">Payment Method</p>
 
             <select
               onChange={(e) => setPaymentOption(e.target.value)}
-              className="mt-2 w-full rounded-xl border px-3 py-2 text-sm outline-none"
+              className="mt-2 w-full rounded border px-3 py-2"
             >
               <option value="COD">Cash on Delivery</option>
               <option value="ONLINE">Online Payment</option>
@@ -240,32 +249,23 @@ const Cart = () => {
 
           {/* BUTTON */}
           <button
-            onClick={() => navigate("/my-orders")}
             disabled={!selectedAddress}
-            className="bg-primary hover:bg-primary-dull mt-6 h-12 w-full rounded-xl font-medium text-white shadow-sm transition disabled:opacity-50"
+            onClick={() => navigate('/my-orders')}
+            className="bg-primary mt-6 w-full rounded py-3 text-white disabled:opacity-50"
           >
-            {paymentOption === "COD" ? "Place Order" : "Proceed to Checkout"}
+            {paymentOption === 'COD' ? 'Place Order' : 'Proceed to Checkout'}
           </button>
-
-          <p className="mt-3 text-center text-xs text-gray-400">
-            Secure checkout • Fast delivery
-          </p>
         </div>
       </div>
     </div>
   ) : (
-    <div className="mt-20 flex flex-col items-center text-center">
-      <img
-        src={assets.emptyCart}
-        alt="emptyCart"
-        className="w-[250px] object-contain"
-      />
-
-      <h2 className="mt-4 text-2xl font-semibold">Your cart is empty </h2>
+    <div className="mt-20 text-center">
+      <img src={assets.emptyCart} className="mx-auto w-[250px]" />
+      <h2 className="mt-4 text-xl">Your cart is empty</h2>
 
       <button
-        onClick={() => navigate("/products")}
-        className="bg-primary hover:bg-primary-dull mt-5 rounded-lg px-6 py-2 text-white transition"
+        onClick={() => navigate('/products')}
+        className="bg-primary mt-5 rounded px-6 py-2 text-white"
       >
         Shop Now
       </button>
