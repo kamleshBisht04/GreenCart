@@ -47,7 +47,7 @@ const Cart = () => {
       .filter(Boolean);
   }, [products, cartItems]);
 
-  // ✅ fetch addresses
+  //fetch addresses
   const getUserAddress = async () => {
     try {
       const { data } = await axios.get('/api/address/get');
@@ -68,7 +68,40 @@ const Cart = () => {
     }
   };
 
-  
+  const placeOrder = async () => {
+    try {
+      if (!selectedAddress) {
+        return toast.error('Please select an address');
+      }
+
+      if (cartArray.length === 0) {
+        return toast.error('Cart is empty');
+      }
+
+      const orderData = {
+        userId: user?._id,
+        items: cartArray.map((item) => ({
+          productId: item._id,
+          quantity: item.quantity,
+        })),
+        address: selectedAddress,
+      };
+
+      if (paymentOption === 'COD') {
+        const { data } = await axios.post('/api/order/cod', orderData);
+
+        if (data.success) {
+          toast.success(data.message);
+          navigate('/my-orders');
+        } else {
+          toast.error(data.message);
+        }
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   useEffect(() => {
     if (user) {
       getUserAddress();
@@ -250,7 +283,7 @@ const Cart = () => {
           {/* BUTTON */}
           <button
             disabled={!selectedAddress}
-            onClick={() => navigate('/my-orders')}
+            onClick={placeOrder}
             className="bg-primary mt-6 w-full rounded py-3 text-white disabled:opacity-50"
           >
             {paymentOption === 'COD' ? 'Place Order' : 'Proceed to Checkout'}

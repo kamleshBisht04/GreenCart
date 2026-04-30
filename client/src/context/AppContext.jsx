@@ -2,7 +2,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import { dummyProducts } from '../assets/assets';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 
@@ -21,7 +20,6 @@ export const AppContextProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
-  console.log(products);
 
   // Fetch seller Status
   const fetchSeller = async () => {
