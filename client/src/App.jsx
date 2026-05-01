@@ -1,4 +1,3 @@
-import { Toaster } from 'react-hot-toast';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { useAppContext } from './context/AppContext';
 
@@ -20,6 +19,7 @@ import SellerLayout from './pages/seller/SellerLayout';
 import AddProduct from './pages/seller/AddProduct';
 import ProductList from './pages/seller/ProductList';
 import Orders from './pages/seller/Orders';
+import AppToaster from './components/AppToaster';
 
 const App = () => {
   const isSellerPath = useLocation().pathname.includes('seller');
@@ -29,7 +29,7 @@ const App = () => {
     <div className="flex h-screen flex-col bg-white text-gray-700">
       {!isSellerPath && <Navbar />}
       {showUserLogIn && <Login />}
-      <Toaster />
+      <AppToaster/>
 
       {/* MAIN AREA */}
       <div className="min-h-0 flex-1">

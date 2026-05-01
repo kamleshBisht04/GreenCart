@@ -232,15 +232,16 @@ const Cart = () => {
                   ? `${selectedAddress.street}, ${selectedAddress.city}, ${selectedAddress.state}, ${selectedAddress.country}`
                   : 'No address found'}
               </p>
-
-              {addresses.length > 0 && (
-                <button
-                  onClick={() => setShowAddress(!showAddress)}
-                  className="text-primary text-sm"
-                >
-                  Change
-                </button>
-              )}
+              <button
+                onClick={() =>
+                  addresses.length === 0
+                    ? navigate('/add-address')
+                    : setShowAddress(!showAddress)
+                }
+                className="text-primary text-sm"
+              >
+                {addresses.length === 0 ? '+ Add Address' : 'Change'}
+              </button>
             </div>
 
             {showAddress && (
