@@ -38,7 +38,7 @@ const ProductDetails = () => {
     .slice(0, 10);
 
   return (
-    <div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto mt-28 max-w-7xl px-4 sm:px-6 lg:px-8">
       {/* Breadcrumb */}
       <div className="text-sm text-gray-500">
         <Breadcrumb product={product} />

@@ -19,7 +19,7 @@ const CategoryNavbar = () => {
   };
 
   return (
-    <div className="fixed top-[64px] right-0 left-0 z-40 w-full overflow-hidden border-b border-gray-200 bg-white/80 backdrop-blur-md">
+    <div className="fixed top-[64px] right-0 left-0 z-100 w-full overflow-hidden border-b border-gray-200 bg-white/80 backdrop-blur-md">
       <div className="relative flex items-center">
         {/* ⬅ LEFT BUTTON (responsive size) */}
         <button

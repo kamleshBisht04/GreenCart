@@ -24,7 +24,7 @@ const ProductCategory = () => {
   return (
     <>
       <CategoryNavbar />
-      <div className="mt-[8rem] px-4">
+      <div className="mt-[9rem] px-4">
         {searchCategory && (
           <div className="item-end flex w-max flex-col">
             <p className="text-2xl font-medium">{searchCategory.text}</p>

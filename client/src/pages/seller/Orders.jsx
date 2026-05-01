@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAppContext } from '../../context/AppContext.jsx';
 import { assets } from '../../assets/assets.js';
 import toast from 'react-hot-toast';
+import ProgressDots from '../../components/ProgressDots.jsx';
 
 function Orders() {
   const { currency, axios } = useAppContext();
@@ -10,6 +11,7 @@ function Orders() {
   const fetchOrders = async () => {
     try {
       const { data } = await axios.get('/api/order/seller');
+      console.log(data);
       if (data.success) setOrders(data.orders);
       else toast.error(data.message);
     } catch (error) {
@@ -29,6 +31,7 @@ function Orders() {
       {/* HEADER */}
       <div className="px-6 py-6 md:px-10">
         <h2 className="text-2xl font-medium text-gray-800">Orders</h2>
+        <ProgressDots/>
         <p className="text-sm text-gray-500">Manage customer orders</p>
       </div>
 
