@@ -36,7 +36,7 @@ const ProductCard = ({ product }) => {
         )}
 
         <img
-          src={product.images[0]}
+          src={product?.images[0]}
           alt={product.name}
           className="h-full w-full rounded-2xl  p-2 transition-transform duration-300 group-hover:scale-110 "
         />
