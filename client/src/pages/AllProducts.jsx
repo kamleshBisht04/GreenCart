@@ -1,23 +1,29 @@
-import { useMemo } from "react";
-import { useAppContext } from "../context/AppContext";
-import ProductCard from "../components/ProductCard";
+import { useMemo } from 'react';
+import { useAppContext } from '../context/AppContext';
+import ProductCard from '../components/ProductCard';
+import { shuffleProduct } from '../utils/utils';
 
 const AllProducts = () => {
   const { products, searchQuery } = useAppContext();
 
- const filteredProducts = useMemo(() => {
-   if (!products) return [];
+  const filteredProducts = useMemo(() => {
+    if (!products) return [];
 
-   const query = String(searchQuery || '').toLowerCase();
+    const query = String(searchQuery || '').toLowerCase();
 
-   return products.filter((product) => {
-     if (!product.inStock) return false; // hide out of stock
+    let result = products.filter((product) => {
+      if (!product.inStock) return false;
 
-     if (!query) return true;
+      if (!query) return true;
 
-     return product.name.toLowerCase().includes(query);
-   });
- }, [searchQuery, products]);
+      return product.name.toLowerCase().includes(query);
+    });
+
+    //  RANDOM ORDER
+    result = shuffleProduct(result);
+
+    return result;
+  }, [searchQuery, products]);
 
   return (
     <div className="mt-24 px-4 md:px-8">
