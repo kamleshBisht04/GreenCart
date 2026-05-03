@@ -14,21 +14,21 @@ const MainBanner = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % desktopImages.length);
-    }, 8000);
+    }, 4000);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
     <div className="relative">
-      {/* ✅ MOBILE IMAGE (UNCHANGED) */}
+      {/*  MOBILE IMAGE (UNCHANGED) */}
       <img
         src={assets.main_banner_bg_sm}
         alt="banner"
         className="w-full md:hidden"
       />
 
-      {/* ✅ DESKTOP SLIDER ONLY (md+) */}
+      {/*  DESKTOP SLIDER ONLY (md+) */}
       <div className="relative hidden h-[32rem] overflow-hidden rounded-2xl md:block">
         <div
           className="flex transition-transform duration-700 ease-in-out"
@@ -47,7 +47,7 @@ const MainBanner = () => {
         </div>
       </div>
 
-      {/* ✅ CONTENT (UNCHANGED EXACT CLASS) */}
+      {/* CONTENT */}
       <div className="absolute inset-0 flex flex-col items-center justify-end px-4 pb-24 md:items-start md:justify-center md:pb-0 md:pl-18 lg:pl-24">
         <h1 className="max-w-72 text-center text-3xl leading-tight font-bold md:max-w-80 md:text-left md:text-4xl lg:max-w-105 lg:text-5xl lg:leading-15">
           Freshness You Can Trust, Delivered to Your Door!
@@ -80,7 +80,7 @@ const MainBanner = () => {
         </div>
       </div>
 
-      {/* ✅ DOTS (ONLY FOR DESKTOP) */}
+      {/* DOTS (ONLY FOR DESKTOP) */}
       <div className="absolute bottom-4 left-1/2 hidden -translate-x-1/2 gap-2 md:flex">
         {desktopImages.map((_, i) => (
           <button
