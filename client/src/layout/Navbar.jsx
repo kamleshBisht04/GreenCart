@@ -128,7 +128,14 @@ const Navbar = () => {
         {/* CART */}
         <div
           className="relative cursor-pointer"
-          onClick={() => navigate('/cart')}
+          onClick={() => {
+            if (!user) {
+              toast.error('Please login first');
+              setShowUserLogIn(true);
+              return;
+            }
+            navigate('/cart');
+          }}
         >
           <img src={assets.nav_cart_icon} className="w-6 opacity-80" />
           {totalItems > 0 && (
@@ -171,7 +178,17 @@ const Navbar = () => {
 
       {/* MOBILE */}
       <div className="flex items-center gap-6 sm:hidden">
-        <div onClick={() => navigate('/cart')} className="relative">
+        <div
+          onClick={() => {
+            if (!user) {
+              toast.error('Please login first');
+              setShowUserLogIn(true);
+              return;
+            }
+            navigate('/cart');
+          }}
+          className="relative"
+        >
           <img src={assets.nav_cart_icon} className="w-6" />
           {totalItems > 0 && (
             <button className="bg-primary absolute -top-2 -right-3 h-[18px] w-[18px] rounded-full text-xs text-white">

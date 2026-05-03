@@ -20,6 +20,7 @@ import AddProduct from './pages/seller/AddProduct';
 import ProductList from './pages/seller/ProductList';
 import Orders from './pages/seller/Orders';
 import AppToaster from './components/AppToaster';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
   const isSellerPath = useLocation().pathname.includes('seller');
@@ -29,7 +30,7 @@ const App = () => {
     <div className="flex h-screen flex-col bg-white text-gray-700">
       {!isSellerPath && <Navbar />}
       {showUserLogIn && <Login />}
-      <AppToaster/>
+      <AppToaster />
 
       {/* MAIN AREA */}
       <div className="min-h-0 flex-1">
@@ -48,7 +49,14 @@ const App = () => {
               path="/products/:category/:id"
               element={<ProductDetails />}
             />
-            <Route path="/cart" element={<Cart />} />
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute>
+                  <Cart />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/add-address" element={<AddAddress />} />
             <Route path="/my-orders" element={<MyOrders />} />
             <Route path="/contact" element={<Contact />} />

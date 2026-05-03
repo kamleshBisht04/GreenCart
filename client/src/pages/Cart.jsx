@@ -127,7 +127,6 @@ const Cart = () => {
          description: 'Order Payment',
 
          order_id: data.order.id, // must be backend razorpay order id
-
          handler: async function (response) {
            try {
              const verifyRes = await axios.post('/api/payment/verify', {
@@ -169,6 +168,8 @@ const Cart = () => {
       getUserAddress();
     }
   }, [user]);
+
+ 
 
   return cartArray.length > 0 ? (
     <div className="mt-24 flex flex-col md:flex-row">
