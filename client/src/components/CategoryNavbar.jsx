@@ -68,7 +68,7 @@ const CategoryNavbar = () => {
   };
 
   return (
-    <div className="fixed top-[64px] right-0 left-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md">
+    <div className="fixed top-[64px] right-0 left-0 z-100 border-b border-gray-200 bg-white/80 backdrop-blur-md">
       {/* fade edges */}
       <div className="pointer-events-none absolute top-0 left-0 z-10 h-full w-10 bg-gradient-to-r from-white to-transparent" />
       <div className="pointer-events-none absolute top-0 right-0 z-10 h-full w-10 bg-gradient-to-l from-white to-transparent" />

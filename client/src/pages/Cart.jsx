@@ -69,40 +69,100 @@ const Cart = () => {
     }
   };
 
-  const placeOrder = async () => {
-    try {
-      if (!selectedAddress) {
-        return toast.error('Please select an address');
-      }
+ const placeOrder = async () => {
+   try {
+     if (!selectedAddress) {
+       return toast.error('Please select an address');
+     }
 
-      if (cartArray.length === 0) {
-        return toast.error('Cart is empty');
-      }
+     if (cartArray.length === 0) {
+       return toast.error('Cart is empty');
+     }
 
-      const orderData = {
-        userId: user?._id,
-        items: cartArray.map((item) => ({
-          productId: item._id,
-          quantity: item.quantity,
-        })),
-        address: selectedAddress,
-      };
+     const orderData = {
+       items: cartArray.map((item) => ({
+         productId: item._id,
+         quantity: item.quantity,
+       })),
+       address: selectedAddress,
+     };
 
-      if (paymentOption === 'COD') {
-        const { data } = await axios.post('/api/order/cod', orderData);
+     // 🟢 COD FLOW
+     if (paymentOption === 'COD') {
+       const { data } = await axios.post('/api/order/cod', orderData);
 
-        if (data.success) {
-          toast.success(data.message);
-          navigate('/my-orders');
-          setCartItems({});
-        } else {
-          toast.error(data.message);
-        }
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
+       if (data.success) {
+         toast.success(data.message);
+         navigate('/my-orders');
+         setCartItems({});
+       } else {
+         toast.error(data.message);
+       }
+     }
+
+     // 🔵 ONLINE PAYMENT FLOW
+     else {
+       // STEP 1: create order from backend
+       const { data } = await axios.post('/api/payment/create-order', {
+         items: orderData.items,
+       });
+
+       if (!data.success) {
+         return toast.error('Payment order failed');
+       }
+
+       // STEP 2: CHECK KEY
+       const key = import.meta.env.VITE_RAZORPAY_KEY_ID;
+
+       if (!key) {
+         return toast.error('Razorpay key missing in frontend .env');
+       }
+
+       // STEP 3: Razorpay options
+       const options = {
+         key: key,
+         amount: data.amount * 100,
+         currency: 'INR',
+         name: 'My Store',
+         description: 'Order Payment',
+
+         order_id: data.order.id, // must be backend razorpay order id
+
+         handler: async function (response) {
+           try {
+             const verifyRes = await axios.post('/api/payment/verify', {
+               razorpay_order_id: response.razorpay_order_id,
+               razorpay_payment_id: response.razorpay_payment_id,
+               razorpay_signature: response.razorpay_signature,
+               items: orderData.items,
+               address: selectedAddress,
+             });
+
+             if (verifyRes.data.success) {
+               toast.success('Payment successful & Order placed');
+               navigate('/my-orders');
+               setCartItems({});
+             } else {
+               toast.error('Payment verification failed');
+             }
+           } catch (err) {
+             toast.error(err.message);
+           }
+         },
+
+         theme: {
+           color: '#3399cc',
+         },
+       };
+
+       // STEP 4: open Razorpay
+       const rzp = new window.Razorpay(options);
+       rzp.open();
+     }
+   } catch (error) {
+     toast.error(error.message);
+   }
+ };
 
   useEffect(() => {
     if (user) {
