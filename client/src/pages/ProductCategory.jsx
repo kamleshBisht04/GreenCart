@@ -4,6 +4,7 @@ import { categories } from '../assets/assets';
 import ProductCard from '../components/ProductCard';
 import ProgressDots from '../components/ProgressDots';
 import CategoryNavbar from '../components/CategoryNavbar';
+import { shuffleProduct } from '../utils/utils';
 
 const ProductCategory = () => {
   const { products } = useAppContext();
@@ -15,11 +16,12 @@ const ProductCategory = () => {
     (item) => item.path.toLowerCase() === normalizedCategory,
   );
 
-  const filteredProducts = products.filter(
+  let filteredProducts = products.filter(
     (product) =>
       product?.category?.toLowerCase() === normalizedCategory &&
       product?.inStock,
   );
+  filteredProducts = shuffleProduct(filteredProducts);
 
   return (
     <>
@@ -33,7 +35,7 @@ const ProductCategory = () => {
         )}
 
         {filteredProducts.length > 0 ? (
-          <div className="mt-6 grid grid-cols-2 gap-4  sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 md:gap-14 xl:grid-cols-7">
+          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 md:gap-14 lg:grid-cols-5 xl:grid-cols-7">
             {filteredProducts.map((product) => (
               <div key={product._id}>
                 <ProductCard product={product} />
