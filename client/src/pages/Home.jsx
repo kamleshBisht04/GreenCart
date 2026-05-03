@@ -1,6 +1,5 @@
 import BestSeller from '../components/BestSeller';
 import BootomBanner from '../components/BootomBanner';
-import Categories from '../components/Categories';
 import CategoryBar from '../components/CategoryBar';
 import CategoryProducts from '../components/CategoryProducts';
 import MainBanner from '../components/MainBanner';
@@ -11,12 +10,16 @@ const Home = () => {
     <div className="mt-6">
       <CategoryBar />
       <MainBanner />
-      <Categories />
-      <CategoryProducts title="Fresh Fruits You’ll Love" category="fruits" />
+      <CategoryProducts title="Fresh Fruits You’ll Love" category="fruits" limit={14} />
       <BestSeller />
       <CategoryProducts
         title="Pure & Fresh Dairy Essentials"
         category="Dairy"
+      />
+      <CategoryProducts
+        title=" Wholesome Grains for Your Kitchen"
+        category="Grains"
+        limit={14}
       />
       <BootomBanner />
       <NewsLetter />
