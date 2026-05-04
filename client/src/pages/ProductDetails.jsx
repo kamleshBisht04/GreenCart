@@ -16,6 +16,7 @@ const ProductDetails = () => {
     addToCart,
     removeFromCart,
     getItemQuantity,
+    setShowUserLogIn, 
   } = useAppContext();
 
   const { id } = useParams();
@@ -40,11 +41,11 @@ const ProductDetails = () => {
     )
     .slice(0, 10);
 
-  // ✅ HANDLERS
+  // HANDLERS 
   const handleAddToCart = (productId) => {
     if (!user) {
       toast.error('Please login first');
-      navigate('/login', { state: { from: `/product/${productId}` } });
+      setShowUserLogIn(true); //  modal open
       return;
     }
     addToCart(productId);
@@ -54,7 +55,7 @@ const ProductDetails = () => {
   const handleBuyNow = (productId) => {
     if (!user) {
       toast.error('Please login first');
-      navigate('/login', { state: { from: `/product/${productId}` } });
+      setShowUserLogIn(true); //  modal open
       return;
     }
     addToCart(productId);
@@ -185,7 +186,7 @@ const ProductDetails = () => {
         </div>
       </div>
 
-      {/* RELATED PRODUCTS (UNCHANGED ✅) */}
+      {/* RELATED PRODUCTS */}
       <div className="mt-16">
         <div className="text-center">
           <h2 className="text-2xl font-bold">Related Products</h2>

@@ -45,7 +45,7 @@ const Login = () => {
         onClick={(e) => e.stopPropagation()} //  prevent close on form click
         className="relative m-auto flex w-80 flex-col gap-4 rounded-lg border border-gray-200 bg-white p-8 py-10 shadow-xl sm:w-[360px]"
       >
-        {/*  CLOSE BUTTON (TOP RIGHT CORNER) */}
+        {/*  CLOSE BUTTON  */}
         <button
           type="button"
           onClick={() => {
