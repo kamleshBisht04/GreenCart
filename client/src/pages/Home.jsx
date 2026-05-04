@@ -10,7 +10,11 @@ const Home = () => {
     <div className="mt-6">
       <CategoryBar />
       <MainBanner />
-      <CategoryProducts title="Fresh Fruits You’ll Love" category="fruits" limit={14} />
+      <CategoryProducts
+        title="Fresh Fruits You’ll Love"
+        category="fruits"
+        limit={14}
+      />
       <BestSeller />
       <CategoryProducts
         title="Pure & Fresh Dairy Essentials"
@@ -19,6 +23,11 @@ const Home = () => {
       <CategoryProducts
         title=" Wholesome Grains for Your Kitchen"
         category="Grains"
+        limit={14}
+      />
+      <CategoryProducts
+        title="Crafted for True Chocolate Lovers"
+        category="Sweets"
         limit={14}
       />
       <BootomBanner />
