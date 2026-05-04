@@ -4,7 +4,6 @@ import { categories } from '../assets/assets';
 import ProductCard from '../components/ProductCard';
 import ProgressDots from '../components/ProgressDots';
 import CategoryNavbar from '../components/CategoryNavbar';
-import { shuffleProduct } from '../utils/utils';
 
 const ProductCategory = () => {
   const { products } = useAppContext();
@@ -16,12 +15,12 @@ const ProductCategory = () => {
     (item) => item.path.toLowerCase() === normalizedCategory,
   );
 
-  let filteredProducts = products.filter(
+  const filteredProducts = products.filter(
     (product) =>
       product?.category?.toLowerCase() === normalizedCategory &&
       product?.inStock,
   );
-  filteredProducts = shuffleProduct(filteredProducts);
+ 
 
   return (
     <>
