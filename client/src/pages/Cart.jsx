@@ -102,7 +102,7 @@ const Cart = () => {
        }
      }
 
-     // 🔵 ONLINE PAYMENT FLOW
+     //  ONLINE PAYMENT FLOW
      else {
        // STEP 1: create order from backend
        const { data } = await axios.post('/api/payment/create-order', {

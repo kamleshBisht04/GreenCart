@@ -1,9 +1,12 @@
 import { Route, Routes, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useAppContext } from './context/AppContext';
 
 import Navbar from './layout/Navbar';
 import Footer from './layout/Footer';
 import Login from './components/Login';
+import AppToaster from './components/AppToaster';
+import ProtectedRoute from './components/ProtectedRoute';
 
 import Home from './pages/Home';
 import Contact from './pages/Contact';
@@ -19,20 +22,29 @@ import SellerLayout from './pages/seller/SellerLayout';
 import AddProduct from './pages/seller/AddProduct';
 import ProductList from './pages/seller/ProductList';
 import Orders from './pages/seller/Orders';
-import AppToaster from './components/AppToaster';
-import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
-  const isSellerPath = useLocation().pathname.includes('seller');
+  const location = useLocation();
+  const isSellerPath = location.pathname.startsWith('/seller');
+
   const { showUserLogIn, isSeller } = useAppContext();
+
+  // Lock scroll when login modal is open
+  useEffect(() => {
+    document.body.style.overflow = showUserLogIn ? 'hidden' : 'auto';
+  }, [showUserLogIn]);
 
   return (
     <div className="flex h-screen flex-col bg-white text-gray-700">
+      {/* Navbar */}
       {!isSellerPath && <Navbar />}
+
+      {/* Login Modal */}
       {showUserLogIn && <Login />}
+
       <AppToaster />
 
-      {/* MAIN AREA */}
+      {/* MAIN CONTENT */}
       <div className="min-h-0 flex-1">
         <div
           className={
@@ -42,6 +54,7 @@ const App = () => {
           }
         >
           <Routes>
+            {/* PUBLIC ROUTES */}
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<AllProducts />} />
             <Route path="/products/:category" element={<ProductCategory />} />
@@ -49,6 +62,9 @@ const App = () => {
               path="/products/:category/:id"
               element={<ProductDetails />}
             />
+            <Route path="/contact" element={<Contact />} />
+
+            {/* USER PROTECTED ROUTES */}
             <Route
               path="/cart"
               element={
@@ -59,11 +75,10 @@ const App = () => {
             />
             <Route path="/add-address" element={<AddAddress />} />
             <Route path="/my-orders" element={<MyOrders />} />
-            <Route path="/contact" element={<Contact />} />
 
-            {/* SELLER */}
+            {/* SELLER ROUTES */}
             <Route
-              path="/seller"
+              path="/seller/*"
               element={isSeller ? <SellerLayout /> : <SellerLogIn />}
             >
               <Route index element={<AddProduct />} />
@@ -72,6 +87,8 @@ const App = () => {
             </Route>
           </Routes>
         </div>
+
+        {/* Footer */}
         {!isSellerPath && <Footer />}
       </div>
     </div>
