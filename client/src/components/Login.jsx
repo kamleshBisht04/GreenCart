@@ -34,8 +34,11 @@ const Login = () => {
 
   return (
     <div
-      onClick={() => setShowUserLogIn(false)} //  overlay click
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 text-sm text-gray-600"
+      onClick={() => {
+        navigate('/');
+        setShowUserLogIn(false);
+      }} //  overlay click
+      className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 text-sm text-gray-600"
     >
       <form
         onSubmit={onSubmitHandler}
@@ -45,7 +48,10 @@ const Login = () => {
         {/*  CLOSE BUTTON (TOP RIGHT CORNER) */}
         <button
           type="button"
-          onClick={() => setShowUserLogIn(false)}
+          onClick={() => {
+            setShowUserLogIn(false);
+            navigate('/');
+          }}
           className="text-primary hover:text-primary-dull absolute top-3 right-3 text-xl transition-transform duration-500 hover:rotate-180"
         >
           ×
