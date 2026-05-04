@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useAppContext } from '../context/AppContext';
 import toast from 'react-hot-toast';
 import { assets } from '../assets/assets';
+import { loadRazorpay } from '../components/loadRazorpay';
 
 const Cart = () => {
   const {
@@ -89,6 +90,7 @@ const Cart = () => {
 
      // 🟢 COD FLOW
      if (paymentOption === 'COD') {
+       
        const { data } = await axios.post('/api/order/cod', orderData);
 
        if (data.success) {
@@ -118,6 +120,7 @@ const Cart = () => {
          return toast.error('Razorpay key missing in frontend .env');
        }
 
+       await loadRazorpay();
        // STEP 3: Razorpay options
        const options = {
          key: key,
