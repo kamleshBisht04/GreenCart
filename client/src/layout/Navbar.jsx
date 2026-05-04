@@ -84,6 +84,7 @@ const Navbar = () => {
             <NavLink
               key={link.path}
               to={link.path}
+              
               className={({ isActive }) =>
                 `rounded-full underline-offset-4 transition ${
                   isActive ? 'text-primary' : 'hover:text-primary'
