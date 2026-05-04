@@ -10,23 +10,42 @@ const MainBanner = () => {
     },
     {
       img: assets.main_banner_bg,
-      title: 'Daily Essentials at Your Fingertips',
+      title: 'Real Freshness, Real Fast, Every Single Day',
     },
     {
       img: assets.main_banner_bg2,
-      title: 'No Waiting, Just Fresh Groceries Delivered Fast',
+      title: 'Lightning Fast Delivery, Right When You Need It',
     },
   ];
 
-  const [current, setCurrent] = useState(0);
+  //  clone first slide at end
+  const extendedSlides = [...slides, slides[0]];
 
+  const [current, setCurrent] = useState(0);
+  const [transition, setTransition] = useState(true);
+
+  //  Auto slide
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % slides.length);
+      setCurrent((prev) => prev + 1);
     }, 4000);
 
     return () => clearInterval(interval);
   }, []);
+
+  //  Infinite loop fix (no jump)
+  useEffect(() => {
+    if (current === slides.length) {
+      setTimeout(() => {
+        setTransition(false); // remove animation
+        setCurrent(0); // jump to real first
+      }, 700);
+
+      setTimeout(() => {
+        setTransition(true); // restore animation
+      }, 750);
+    }
+  }, [current, slides.length]);
 
   return (
     <div className="relative">
@@ -40,12 +59,15 @@ const MainBanner = () => {
       {/* DESKTOP */}
       <div className="relative hidden h-[32rem] overflow-hidden rounded-2xl md:block">
         <div
-          className="flex transition-transform duration-700 ease-in-out"
+          className="flex"
           style={{
             transform: `translateX(-${current * 100}%)`,
+            transition: transition
+              ? 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
+              : 'none',
           }}
         >
-          {slides.map((slide, index) => (
+          {extendedSlides.map((slide, index) => (
             <div
               key={index}
               className="relative h-[32rem] w-full flex-shrink-0"
@@ -57,27 +79,27 @@ const MainBanner = () => {
                 className="h-full w-full rounded-2xl object-cover"
               />
 
-              {/*  CONTENT (NOW INSIDE SLIDE) */}
-              <div className="absolute inset-0 flex flex-col items-center justify-end px-4 pb-24 md:items-start md:justify-center md:pb-0 md:pl-18 lg:pl-24">
+              {/* CONTENT (inside slide) */}
+              <div className="absolute inset-0 flex flex-col items-center justify-end px-4 pb-24 md:items-start md:justify-center md:pl-18 lg:pl-24">
                 <h1 className="max-w-72 text-center text-3xl leading-tight font-bold md:max-w-80 md:text-left md:text-4xl lg:max-w-105 lg:text-5xl lg:leading-15">
                   {slide.title}
                 </h1>
 
                 <div className="mt-6 flex items-center font-medium">
                   <Link
-                    to={'/products'}
+                    to="/products"
                     className="group bg-primary hover:bg-primary-dull flex cursor-pointer items-center gap-2 rounded px-7 py-3 text-white transition md:px-9"
                   >
                     Shop now
                     <img
-                      className="group-focus::translate-x-1 transition md:hidden"
+                      className="transition md:hidden"
                       src={assets.white_arrow_icon}
                       alt="arrow"
                     />
                   </Link>
 
                   <Link
-                    to={'/products'}
+                    to="/products"
                     className="group hidden cursor-pointer items-center gap-2 px-9 py-3 md:flex"
                   >
                     Explore deals
