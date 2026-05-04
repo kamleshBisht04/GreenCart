@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import Order from '../models/Order.js';
 import Product from '../models/Product.js';
 
-// 🟢 CREATE RAZORPAY ORDER
+//  CREATE RAZORPAY ORDER
 export const createOrder = async (req, res) => {
   try {
     const { items } = req.body;
@@ -54,7 +54,7 @@ export const createOrder = async (req, res) => {
   }
 };
 
-// 🟢 VERIFY PAYMENT + CREATE ORDER
+//  VERIFY PAYMENT + CREATE ORDER
 export const verifyPayment = async (req, res) => {
   try {
     const {
