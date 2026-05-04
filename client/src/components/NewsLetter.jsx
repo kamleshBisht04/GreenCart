@@ -1,7 +1,36 @@
-export default function NewsLetter() {
+import { useState } from 'react';
+import { useAppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
+
+const NewsLetter = () => {
+  const { axios } = useAppContext();
+  const [email, setEmail] = useState('');
+
+  const handleSubscribe = async () => {
+    if (!email) {
+      toast.error('Please enter your email');
+      return;
+    }
+
+    try {
+      const { data } = await axios.post('/api/newsletter', {
+        email,
+      });
+
+      if (data.success) {
+        toast.success(data.message || 'Subscribed ');
+        setEmail('');
+      } else {
+        toast.error(data.message || 'Something went wrong');
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Server error');
+    }
+  };
+
   return (
-    <div className="mx-auto mt-24 flex w-full max-w-5xl flex-col gap-8 rounded-2xl  bg-white p-6  md:flex-row md:items-center md:justify-between md:p-10">
-      {/* LEFT SIDE - FORM */}
+    <div className="mx-auto mt-24 flex w-full max-w-5xl flex-col gap-8 rounded-2xl bg-white p-6 md:flex-row md:items-center md:justify-between md:p-10">
+      {/* LEFT SIDE */}
       <div className="w-full md:max-w-md">
         <h1 className="text-2xl font-semibold text-gray-800 md:text-3xl">
           Get Fresh Grocery Deals
@@ -15,19 +44,23 @@ export default function NewsLetter() {
         <div className="mt-6 flex w-full items-center">
           <input
             type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
             className="w-full rounded-l-md border border-gray-300 px-4 py-2 text-sm outline-none focus:border-green-500"
           />
 
-          <button className="rounded-r-md bg-green-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-green-700">
+          <button
+            onClick={handleSubscribe}
+            className="flex items-center justify-center rounded-r-md bg-green-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-green-700"
+          >
             Subscribe
           </button>
         </div>
       </div>
 
-      {/* RIGHT SIDE - FEATURES */}
+      {/* RIGHT SIDE */}
       <div className="space-y-6 md:max-w-xs">
-        {/* Feature 1 */}
         <div className="flex items-start gap-3">
           <div className="rounded-md bg-green-50 p-2 text-green-600">
             <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
@@ -50,7 +83,6 @@ export default function NewsLetter() {
           </div>
         </div>
 
-        {/* Feature 2 */}
         <div className="flex items-start gap-3">
           <div className="rounded-md bg-green-50 p-2 text-green-600">
             <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
@@ -76,4 +108,6 @@ export default function NewsLetter() {
       </div>
     </div>
   );
-}
+};
+
+export default NewsLetter;
