@@ -72,7 +72,13 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 right-0 left-0 z-[9999] flex items-center justify-between border-b border-gray-300 bg-white/70 px-6 py-4 backdrop-blur-md md:px-16 lg:px-24 xl:px-32">
       {/* Logo */}
-      <NavLink to="/" onClick={() => setOpen(false)}>
+      <NavLink
+        to="/"
+        onClick={() => {
+          setOpen(false);
+          scrollTo(0, 0);
+        }}
+      >
         <img src={assets.logo} alt="logo" />
       </NavLink>
 
@@ -84,7 +90,6 @@ const Navbar = () => {
             <NavLink
               key={link.path}
               to={link.path}
-              
               className={({ isActive }) =>
                 `rounded-full underline-offset-4 transition ${
                   isActive ? 'text-primary' : 'hover:text-primary'

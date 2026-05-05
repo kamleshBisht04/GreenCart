@@ -1,6 +1,8 @@
-import { assets, footerLinks } from "../assets/assets";
+import { assets, footerLinks } from '../assets/assets';
+import { useAppContext } from '../context/AppContext';
 
 const Footer = () => {
+  const { navigate } = useAppContext();
   return (
     <footer className="bg-primary/5 mt-24 w-full">
       <div className="mx-auto max-w-7xl px-6 md:px-10 lg:px-16 xl:px-20">
@@ -8,7 +10,15 @@ const Footer = () => {
         <div className="flex flex-col gap-12 border-b border-gray-200 py-14 text-gray-600 lg:flex-row lg:justify-between">
           {/* BRAND */}
           <div className="w-full lg:max-w-sm">
-            <img className="w-28 md:w-32" src={assets.logo} alt="logo" />
+            <img
+              className="w-28 cursor-pointer md:w-32"
+              src={assets.logo}
+              alt="logo"
+              onClick={() => {
+                navigate('/');
+                scrollTo(0, 0);
+              }}
+            />
 
             <p className="mt-5 text-sm leading-6 text-gray-500">
               Fresh groceries delivered to your doorstep with speed and care. We
