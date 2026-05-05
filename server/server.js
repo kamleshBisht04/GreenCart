@@ -44,7 +44,7 @@ app.use(
   cors({
     origin: [
       'http://localhost:5173',
-      'https://greencart-lilac-iota.vercel.app/',
+      'https://greencart-lilac-iota.vercel.app',
     ],
     credentials: true,
   }),
