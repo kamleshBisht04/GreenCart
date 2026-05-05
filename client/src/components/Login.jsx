@@ -82,6 +82,7 @@ const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
             className="mt-1 w-full rounded border p-2"
             type="email"
+            autoComplete="email"
             required
           />
         </div>

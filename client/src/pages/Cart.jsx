@@ -88,7 +88,7 @@ const Cart = () => {
        address: selectedAddress,
      };
 
-     // 🟢 COD FLOW
+     //  COD FLOW
      if (paymentOption === 'COD') {
        
        const { data } = await axios.post('/api/order/cod', orderData);
