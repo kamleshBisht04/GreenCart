@@ -25,7 +25,7 @@ const startServer = async () => {
   try {
     await connectDB();
     await connectCloudinary();
-    console.log('✅ DB & Cloudinary Connected');
+    console.log(' DB & Cloudinary Connected');
 
     app.listen(PORT, () => {
       console.log(` Server running on http://localhost:${PORT}`);
