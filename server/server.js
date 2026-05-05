@@ -2,9 +2,11 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
+// DB & Configs
 import connectDB from './configs/db.js';
 import connectCloudinary from './configs/cloudinary.js';
 
+// Routes
 import userRouter from './routes/userRoute.js';
 import sellerRouter from './routes/sellerRoute.js';
 import productRouter from './routes/productRoute.js';
@@ -16,29 +18,41 @@ import contactRouter from './routes/contactRoutes.js';
 import newsletterRouter from './routes/newsletterRoutes.js';
 
 const app = express();
+const PORT = process.env.PORT || 4000;
 
-// ✅ Connect once (serverless friendly)
-await connectDB();
-await connectCloudinary();
+// Connect DB & Cloudinary
+const startServer = async () => {
+  try {
+    await connectDB();
+    await connectCloudinary();
+    console.log(' DB & Cloudinary Connected');
 
+    app.listen(PORT, () => {
+      console.log(` Server running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error(' Server Start Failed:', error.message);
+    process.exit(1);
+  }
+};
+
+// Middleware
 app.use(express.json());
 app.use(cookieParser());
 
 app.use(
   cors({
-    origin: [
-      'http://localhost:5173',
-      'https://greencart-lilac-iota.vercel.app',
-    ],
+    origin: ['http://localhost:5173','https://greencart-lilac-iota.vercel.app'],
     credentials: true,
   }),
 );
 
+// Health Check Route
 app.get('/', (req, res) => {
-  res.send('API is Working');
+  res.send('API is Working ');
 });
 
-// routes
+//  API Routes
 app.use('/api/user', userRouter);
 app.use('/api/seller', sellerRouter);
 app.use('/api/product', productRouter);
@@ -48,5 +62,9 @@ app.use('/api/order', orderRouter);
 app.use('/api/payment', paymentRouter);
 app.use('/api/contact', contactRouter);
 app.use('/api/newsletter', newsletterRouter);
+
+// Start Server
+startServer();
+
 
 export default app;
