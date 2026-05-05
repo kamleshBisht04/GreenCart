@@ -25,13 +25,12 @@ export const sellerLogin = (req, res) => {
     // create token
     const token = generateToken({ email, role: 'seller' });
 
-   
-
     res.cookie('sellerToken', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: true, // ALWAYS true in production
+      sameSite: 'none', // ALWAYS required for Vercel frontend + backend
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: '/',
     });
 
     return res.status(200).json({
@@ -62,8 +61,8 @@ export const sellerLogout = (req, res) => {
   try {
     res.clearCookie('sellerToken', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: true, // ALWAYS true in production
+      sameSite: 'none', // ALWAYS required for Vercel frontend + backend
     });
 
     return res.status(200).json({
