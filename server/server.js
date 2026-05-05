@@ -2,11 +2,9 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
-// DB & Configs
 import connectDB from './configs/db.js';
 import connectCloudinary from './configs/cloudinary.js';
 
-// Routes
 import userRouter from './routes/userRoute.js';
 import sellerRouter from './routes/sellerRoute.js';
 import productRouter from './routes/productRoute.js';
@@ -18,21 +16,16 @@ import contactRouter from './routes/contactRoutes.js';
 import newsletterRouter from './routes/newsletterRoutes.js';
 
 const app = express();
-const PORT = process.env.PORT || 4000;
 
-// Connect DB & Cloudinary
-const startServer = async () => {
-  try {
+// ✅ connect once (no listen)
+let isConnected = false;
+
+const connectOnce = async () => {
+  if (!isConnected) {
     await connectDB();
     await connectCloudinary();
-    console.log(' DB & Cloudinary Connected');
-
-    app.listen(PORT, () => {
-      console.log(` Server running on http://localhost:${PORT}`);
-    });
-  } catch (error) {
-    console.error(' Server Start Failed:', error.message);
-    process.exit(1);
+    isConnected = true;
+    console.log('✅ DB & Cloudinary Connected');
   }
 };
 
@@ -47,12 +40,11 @@ app.use(
   }),
 );
 
-// Health Check Route
+// Routes
 app.get('/', (req, res) => {
-  res.send('API is Working ');
+  res.send('API is Working');
 });
 
-//  API Routes
 app.use('/api/user', userRouter);
 app.use('/api/seller', sellerRouter);
 app.use('/api/product', productRouter);
@@ -63,8 +55,13 @@ app.use('/api/payment', paymentRouter);
 app.use('/api/contact', contactRouter);
 app.use('/api/newsletter', newsletterRouter);
 
-// Start Server
-startServer();
-
-
-export default app;
+// ✅ Vercel handler
+export default async function handler(req, res) {
+  try {
+    await connectOnce();
+    return app(req, res);
+  } catch (error) {
+    console.error('❌ Server Error:', error);
+    res.status(500).json({ error: error.message });
+  }
+}
