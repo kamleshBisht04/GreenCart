@@ -89,7 +89,7 @@ const ProductDetails = () => {
           <div className="flex-1 rounded-xl border bg-white p-4">
             <img
               src={displayImage}
-              className="h-[300px] w-full object-contain"
+              className="h-full w-full object-contain"
             />
           </div>
         </div>
