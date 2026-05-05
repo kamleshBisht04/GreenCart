@@ -90,7 +90,7 @@ const App = () => {
           </Routes>
         </div>
 
-        {/* Footer */}
+        {/* Footer section */}
         {!isSellerPath && <Footer />}
       </div>
     </div>
