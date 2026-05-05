@@ -2,9 +2,11 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
+// DB & Configs
 import connectDB from './configs/db.js';
 import connectCloudinary from './configs/cloudinary.js';
 
+// Routes
 import userRouter from './routes/userRoute.js';
 import sellerRouter from './routes/sellerRoute.js';
 import productRouter from './routes/productRoute.js';
@@ -16,8 +18,25 @@ import contactRouter from './routes/contactRoutes.js';
 import newsletterRouter from './routes/newsletterRoutes.js';
 
 const app = express();
+const PORT = process.env.PORT || 4000;
 
-// middleware
+// Connect DB & Cloudinary
+const startServer = async () => {
+  try {
+    await connectDB();
+    await connectCloudinary();
+    console.log(' DB & Cloudinary Connected');
+
+    app.listen(PORT, () => {
+      console.log(` Server running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error(' Server Start Failed:', error.message);
+    process.exit(1);
+  }
+};
+
+// Middleware
 app.use(express.json());
 app.use(cookieParser());
 
@@ -28,17 +47,12 @@ app.use(
   }),
 );
 
-// safe DB connect
-connectDB().catch((err) => console.log('DB Error:', err.message));
-connectCloudinary().catch((err) =>
-  console.log('Cloudinary Error:', err.message),
-);
-
-// routes
+// Health Check Route
 app.get('/', (req, res) => {
-  res.json({ message: 'API Working 🚀' });
+  res.send('API is Working ');
 });
 
+//  API Routes
 app.use('/api/user', userRouter);
 app.use('/api/seller', sellerRouter);
 app.use('/api/product', productRouter);
@@ -49,5 +63,8 @@ app.use('/api/payment', paymentRouter);
 app.use('/api/contact', contactRouter);
 app.use('/api/newsletter', newsletterRouter);
 
-// IMPORTANT
+// Start Server
+startServer();
+
+
 export default app;
