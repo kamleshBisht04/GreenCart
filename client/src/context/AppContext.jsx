@@ -1,6 +1,5 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import axios from 'axios';
@@ -14,127 +13,129 @@ export const AppContextProvider = ({ children }) => {
   const currency = import.meta.env.VITE_CURRENCY || '₹';
 
   const navigate = useNavigate();
+
   const [user, setUser] = useState(null);
   const [isSeller, setIsSeller] = useState(false);
   const [showUserLogIn, setShowUserLogIn] = useState(false);
+
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Fetch seller Status
+  const isInitialCartSync = useRef(true);
+
+  /* ---------------- FETCH SELLER ---------------- */
   const fetchSeller = async () => {
     try {
       const { data } = await axios.get('/api/seller/is-auth');
-      if (data.success) {
-        setIsSeller(true);
-      } else {
-        setIsSeller(false);
-      }
+      setIsSeller(!!data.success);
     } catch {
       setIsSeller(false);
     }
   };
 
-  // Fetch User Auth Status, User Data and Cart Items
+  /* ---------------- FETCH USER ---------------- */
   const fetchUser = async () => {
     try {
       const { data } = await axios.get('/api/user/is-auth');
 
       if (data.success) {
         setUser(data.user);
-        setCartItems(data.user.cartItems);
+        setCartItems(data.user.cartItems || {});
       } else {
         setUser(null);
-        setCartItems([]);
+        setCartItems({});
       }
     } catch {
       setUser(null);
-      setCartItems([]);
+      setCartItems({});
     }
   };
 
-  // Fetch All Products
+  /* ---------------- FETCH PRODUCTS ---------------- */
   const fetchProducts = async () => {
     try {
       const { data } = await axios.get('/api/product/list');
-
-      if (data.success) {
-        setProducts(data.products);
-      } else {
-        setProducts([]);
-      }
-    } catch (error) {
-      console.log('Fetch products error:', error);
+      setProducts(data.success ? data.products : []);
+    } catch (err) {
+      console.log(err);
       setProducts([]);
     }
   };
 
+  /* ---------------- INIT APP ---------------- */
   useEffect(() => {
-    fetchUser();
-    fetchSeller();
-    fetchProducts();
+    const init = async () => {
+      await fetchUser();
+      await fetchSeller();
+      await fetchProducts();
+    };
+
+    init();
   }, []);
 
-  // Update Database Cart Items
-  // Update Database Cart Items
+  /* ---------------- CART SYNC FIXED ---------------- */
   useEffect(() => {
-    const updateCart = async () => {
+    const syncCart = async () => {
       try {
-        const { data } = await axios.post('/api/cart/update', { cartItems });
+        const { data } = await axios.post('/api/cart/update', {
+          cartItems,
+        });
+
         if (!data.success) {
-          toast.error(data.message);
+          toast.error(data.message || 'Cart update failed');
         }
-      } catch (error) {
-        toast.error(error.message);
+      } catch (err) {
+        console.log('Cart sync error:', err.message);
       }
     };
-    if (user) {
-      updateCart();
+
+    // skip first render
+    if (isInitialCartSync.current) {
+      isInitialCartSync.current = false;
+      return;
     }
-  }, [cartItems]);
 
-  // Add Products to Cart
+    if (user) {
+      syncCart();
+    }
+  }, [cartItems, user]);
+
+  /* ---------------- CART FUNCTIONS ---------------- */
   const addToCart = (itemId) => {
-    setCartItems((prev) => {
-      const currentQuantity = prev[itemId] ?? 0;
-      const update = { ...prev, [itemId]: currentQuantity + 1 };
+    setCartItems((prev) => ({
+      ...prev,
+      [itemId]: (prev[itemId] || 0) + 1,
+    }));
 
-      return update;
-    });
-    toast.success('Item added to cart 🛒');
+    toast.success('Item added 🛒');
   };
 
-  // Remove from cart (decrease/delete).
   const removeFromCart = (itemId) => {
     setCartItems((prev) => {
-      const currentQuantity = prev[itemId];
-      if (currentQuantity == null) return prev;
-
       const updated = { ...prev };
-      if (currentQuantity <= 1) delete updated[itemId];
-      else updated[itemId] = currentQuantity - 1;
+
+      if (!updated[itemId]) return prev;
+
+      if (updated[itemId] <= 1) delete updated[itemId];
+      else updated[itemId] -= 1;
 
       return updated;
     });
   };
 
-  // Update Cart items
   const updateCartItem = (itemId, quantity) => {
     setCartItems((prev) => {
       const updated = { ...prev };
 
-      if (quantity <= 0) {
-        delete updated[itemId];
-      } else {
-        updated[itemId] = quantity;
-      }
+      if (quantity <= 0) delete updated[itemId];
+      else updated[itemId] = quantity;
 
       return updated;
     });
   };
 
-  // Clear single item
   const removeItemCompletely = (itemId) => {
     setCartItems((prev) => {
       const updated = { ...prev };
@@ -143,64 +144,69 @@ export const AppContextProvider = ({ children }) => {
     });
   };
 
-  //Clear full Cart
-  const clearCart = () => {
-    setCartItems({});
-  };
+  const clearCart = () => setCartItems({});
 
-  //Get items Quantity
-  const getItemQuantity = (itemId) => {
-    return cartItems[itemId] || 0;
-  };
+  /* ---------------- HELPERS ---------------- */
+  const getItemQuantity = (id) => cartItems[id] || 0;
 
-  //Get total items Count
-  const getTotalItems = () => {
-    return Object.values(cartItems).reduce((sum, qty) => sum + qty, 0);
-  };
+  const getTotalItems = () =>
+    Object.values(cartItems).reduce((sum, qty) => sum + qty, 0);
 
-  //Get total Price
-  const getTotalAmount = () => {
-    return Object.entries(cartItems).reduce((total, [id, qty]) => {
+  const getTotalAmount = () =>
+    Object.entries(cartItems).reduce((total, [id, qty]) => {
       const product = products.find((p) => p._id === id);
       return total + (product?.offerPrice || 0) * qty;
     }, 0);
-  };
 
+  /* ---------------- CONTEXT VALUE ---------------- */
   const value = {
     user,
     setUser,
     navigate,
+
     isSeller,
     setIsSeller,
+
     showUserLogIn,
     setShowUserLogIn,
+
     products,
-    currency,
     cartItems,
+
     addToCart,
     removeFromCart,
     updateCartItem,
     removeItemCompletely,
     clearCart,
+
     getItemQuantity,
     getTotalItems,
     getTotalAmount,
+
     searchQuery,
     setSearchQuery,
+
+    currency,
     axios,
+
     fetchProducts,
-    setCartItems,
+
     loading,
     setLoading,
+
+    setCartItems,
   };
+
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 
+/* ---------------- HOOK ---------------- */
 export const useAppContext = () => {
   const context = useContext(AppContext);
 
   if (!context) {
-    throw new Error('useAppContext must be used within AppProvider');
+    throw new Error('useAppContext must be used within AppContextProvider');
   }
+
   return context;
 };
