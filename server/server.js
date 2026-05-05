@@ -42,7 +42,10 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: ['http://localhost:5173'],
+    origin: [
+      'http://localhost:5173',
+      'https://greencart-lilac-iota.vercel.app/',
+    ],
     credentials: true,
   }),
 );
@@ -65,6 +68,5 @@ app.use('/api/newsletter', newsletterRouter);
 
 // Start Server
 startServer();
-
 
 export default app;
