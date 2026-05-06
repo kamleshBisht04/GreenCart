@@ -59,7 +59,7 @@ const MainBanner = () => {
         />
 
         <div className="absolute inset-0 flex flex-col items-start justify-start px-4 pt-16">
-          <h1 className="max-w-[10rem] text-center text-xl leading-tight font-bold">
+          <h1 className="max-w-[10rem] text-center text-2xl leading-tight font-bold">
             Experience Real Freshness, Delivered Right to Your Doorstep.
           </h1>
         </div>
