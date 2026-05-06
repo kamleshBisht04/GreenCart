@@ -51,15 +51,15 @@ const MainBanner = () => {
     <div className="relative">
       {/* MOBILE */}
       {/* MOBILE */}
-      <div className="relative md:hidden">
+      <div className="relative rounded-2xl md:hidden">
         <img
           src={slides[current % slides.length].img}
           alt="banner"
-          className="h-[55vh] w-full object-cover"
+          className="h-[55vh] w-full rounded-2xl object-cover"
         />
 
-        <div className="absolute inset-0 flex flex-col items-start justify-end px-4 pt-16">
-          <h1 className="max-w-[9rem] text-2xl leading-tight font-bold mb-8">
+        <div className="absolute inset-0 flex flex-col items-start justify-start px-4 pt-16">
+          <h1 className="rou max-w-[9rem] text-2xl leading-tight font-bold">
             Freshness You Can Feel, Delivered Right When You Need It.
           </h1>
         </div>
