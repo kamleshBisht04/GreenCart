@@ -55,20 +55,24 @@ export const AppContextProvider = ({ children }) => {
   };
 
   // Fetch All Products
-  const fetchProducts = async () => {
-    try {
-      const { data } = await axios.get('/api/product/list');
+const fetchProducts = async () => {
+  try {
+    setLoading(true); 
 
-      if (data.success) {
-        setProducts(data.products);
-      } else {
-        setProducts([]);
-      }
-    } catch (error) {
-      console.log('Fetch products error:', error);
+    const { data } = await axios.get('/api/product/list');
+
+    if (data.success) {
+      setProducts(data.products);
+    } else {
       setProducts([]);
     }
-  };
+  } catch (error) {
+    console.log('Fetch products error:', error);
+    setProducts([]);
+  } finally {
+    setLoading(false); 
+  }
+};
 
   useEffect(() => {
     fetchUser();
