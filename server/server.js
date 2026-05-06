@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
-dotenv.config({ path: './config.env' });
-// dotenv.config();
+dotenv.config(); // ✅ IMPORTANT: no custom path for deployment
+
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -21,41 +21,44 @@ import contactRouter from './routes/contactRoutes.js';
 import newsletterRouter from './routes/newsletterRoutes.js';
 
 const app = express();
-const PORT = process.env.PORT || 4000;
 
-// Connect DB & Cloudinary
-const startServer = async () => {
+// ========================
+// DB + Cloudinary Connect
+// ========================
+(async () => {
   try {
     await connectDB();
     await connectCloudinary();
-    console.log(' DB & Cloudinary Connected');
-
-    app.listen(PORT, () => {
-      console.log(` Server running on http://localhost:${PORT}`);
-    });
+    console.log('✅ DB & Cloudinary Connected');
   } catch (error) {
-    console.error(' Server Start Failed:', error.message);
-    process.exit(1);
+    console.error('❌ Connection Error:', error.message);
   }
-};
+})();
 
+// ========================
 // Middleware
+// ========================
 app.use(express.json());
 app.use(cookieParser());
 
+// ✅ FIXED CORS (local + production)
 app.use(
   cors({
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173', process.env.FRONTEND_URL],
     credentials: true,
   }),
 );
 
+// ========================
 // Health Check Route
+// ========================
 app.get('/', (req, res) => {
-  res.send('API is Working ');
+  res.send('✅ API is Working');
 });
 
-//  API Routes
+// ========================
+// API Routes
+// ========================
 app.use('/api/user', userRouter);
 app.use('/api/seller', sellerRouter);
 app.use('/api/product', productRouter);
@@ -66,7 +69,26 @@ app.use('/api/payment', paymentRouter);
 app.use('/api/contact', contactRouter);
 app.use('/api/newsletter', newsletterRouter);
 
-// Start Server
-startServer();
+// ========================
+// ERROR HANDLER (optional but good)
+// ========================
+app.use((req, res) => {
+  res.status(404).json({ message: 'Route Not Found' });
+});
 
+// ========================
+// LOCAL vs VERCEL FIX
+// ========================
+
+// ❌ DO NOT use app.listen in serverless
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 4000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+  });
+}
+
+// ========================
+// EXPORT FOR VERCEL
+// ========================
 export default app;
