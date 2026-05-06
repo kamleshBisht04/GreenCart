@@ -58,8 +58,8 @@ const MainBanner = () => {
           className="h-[55vh] w-full object-cover"
         />
 
-        <div className="absolute inset-0 flex flex-col items-start justify-start px-4 pt-16">
-          <h1 className="max-w-[9rem] text-2xl leading-tight font-bold ">
+        <div className="absolute inset-0 flex flex-col items-start justify-end px-4 pt-16">
+          <h1 className="max-w-[9rem] text-2xl leading-tight font-bold mb-8">
             Freshness You Can Feel, Delivered Right When You Need It.
           </h1>
         </div>
