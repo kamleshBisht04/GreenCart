@@ -50,11 +50,20 @@ const MainBanner = () => {
   return (
     <div className="relative">
       {/* MOBILE */}
-      <img
-        src={assets.main_banner_bg_sm}
-        alt="banner"
-        className="w-full md:hidden"
-      />
+      {/* MOBILE */}
+      <div className="relative md:hidden">
+        <img
+          src={slides[current % slides.length].img}
+          alt="banner"
+          className="h-[55vh] w-full object-cover"
+        />
+
+        <div className="absolute inset-0 flex flex-col items-start justify-start px-4 pt-16">
+          <h1 className="max-w-[10rem] text-center text-xl leading-tight font-bold">
+            Experience Real Freshness, Delivered Right to Your Doorstep.
+          </h1>
+        </div>
+      </div>
 
       {/* DESKTOP */}
       <div className="relative hidden h-[32rem] overflow-hidden rounded-2xl md:block">
