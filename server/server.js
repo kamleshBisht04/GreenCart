@@ -1,11 +1,11 @@
+import dotenv from 'dotenv';
+dotenv.config({ path: './config.env' });
+// dotenv.config();
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import dotenv from 'dotenv';
 
-dotenv.config();
-
-// DB & Cloud
+// DB & Configs
 import connectDB from './configs/db.js';
 import connectCloudinary from './configs/cloudinary.js';
 
@@ -21,24 +21,41 @@ import contactRouter from './routes/contactRoutes.js';
 import newsletterRouter from './routes/newsletterRoutes.js';
 
 const app = express();
+const PORT = process.env.PORT || 4000;
 
-/* -------------------- MIDDLEWARE -------------------- */
+// Connect DB & Cloudinary
+const startServer = async () => {
+  try {
+    await connectDB();
+    await connectCloudinary();
+    console.log(' DB & Cloudinary Connected');
+
+    app.listen(PORT, () => {
+      console.log(` Server running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error(' Server Start Failed:', error.message);
+    process.exit(1);
+  }
+};
+
+// Middleware
 app.use(express.json());
 app.use(cookieParser());
 
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'https://green-cart-two-mu.vercel.app'],
+    origin: ['http://localhost:5173'],
     credentials: true,
   }),
 );
 
-/* -------------------- HEALTH CHECK -------------------- */
+// Health Check Route
 app.get('/', (req, res) => {
-  res.send('🚀 GreenCart API is Working');
+  res.send('API is Working ');
 });
 
-/* -------------------- ROUTES -------------------- */
+//  API Routes
 app.use('/api/user', userRouter);
 app.use('/api/seller', sellerRouter);
 app.use('/api/product', productRouter);
@@ -49,33 +66,7 @@ app.use('/api/payment', paymentRouter);
 app.use('/api/contact', contactRouter);
 app.use('/api/newsletter', newsletterRouter);
 
-/* -------------------- DB INIT (IMPORTANT FOR VERCEL) -------------------- */
-let isDBConnected = false;
+// Start Server
+startServer();
 
-const initDB = async () => {
-  try {
-    if (!isDBConnected) {
-      await connectDB();
-      await connectCloudinary();
-      isDBConnected = true;
-      console.log('✅ DB & Cloudinary Connected');
-    }
-  } catch (error) {
-    console.error('❌ DB Connection Error:', error.message);
-  }
-};
-
-// run once per cold start
-initDB();
-
-/* -------------------- LOCAL SERVER ONLY -------------------- */
-if (process.env.NODE_ENV !== 'production') {
-  const PORT = process.env.PORT || 4000;
-
-  app.listen(PORT, () => {
-    console.log(`🔥 Server running on http://localhost:${PORT}`);
-  });
-}
-
-/* -------------------- EXPORT FOR VERCEL -------------------- */
 export default app;
