@@ -45,7 +45,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173', 'https://greencart-eta-sage.vercel.app'],
     credentials: true,
   }),
 );
