@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.config(); // ✅ IMPORTANT: no custom path for deployment
+dotenv.config();
 
 import express from 'express';
 import cookieParser from 'cookie-parser';
@@ -25,7 +25,7 @@ const app = express();
 // ========================
 // DB + Cloudinary Connect
 // ========================
-(async () => {
+const init = async () => {
   try {
     await connectDB();
     await connectCloudinary();
@@ -33,7 +33,9 @@ const app = express();
   } catch (error) {
     console.error('❌ Connection Error:', error.message);
   }
-})();
+};
+
+init(); // Non-blocking DB init
 
 // ========================
 // Middleware
@@ -70,23 +72,11 @@ app.use('/api/contact', contactRouter);
 app.use('/api/newsletter', newsletterRouter);
 
 // ========================
-// ERROR HANDLER (optional but good)
+// ERROR HANDLER
 // ========================
 app.use((req, res) => {
   res.status(404).json({ message: 'Route Not Found' });
 });
-
-// ========================
-// LOCAL vs VERCEL FIX
-// ========================
-
-// ❌ DO NOT use app.listen in serverless
-if (process.env.NODE_ENV !== 'production') {
-  const PORT = process.env.PORT || 4000;
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
-  });
-}
 
 // ========================
 // EXPORT FOR VERCEL

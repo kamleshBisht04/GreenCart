@@ -1,18 +1,23 @@
 import mongoose from 'mongoose';
-
-const DB = process.env.MONGODB_URI.replace(
-  '<PASSWORD>',
-  process.env.DB_PASSWORD,
-);
+import dotenv from 'dotenv';
+dotenv.config();
 
 const connectDB = async () => {
   try {
-    mongoose.connection.on('connected', () => {
-      console.log('Database  connected !');
+    const uri = process.env.MONGODB_URI.replace(
+      '<PASSWORD>',
+      process.env.DB_PASSWORD,
+    );
+
+    await mongoose.connect(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     });
-    await mongoose.connect(DB);
+
+    console.log('✅ MongoDB Connected');
   } catch (error) {
-    console.log(error.message);
+    console.error('❌ MongoDB Connection Error:', error.message);
+    process.exit(1); // Server exit if DB fails
   }
 };
 
