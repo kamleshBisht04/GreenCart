@@ -80,15 +80,15 @@ JWT-based login system
 HTTP-only cookies for security
 Protected routes for cart & checkout
 📸 Screenshots
-<img width="1920" height="1020" alt="Screenshot 2026-04-29 203541" src="https://github.com/user-attachments/assets/81906daf-8eeb-4cbe-b792-593c782377e7" />
-<img width="1920" height="1020" alt="Screenshot 2026-05-01 205507" src="https://github.com/user-attachments/assets/e6e10fe1-9d54-4184-9cfe-01015c5a24f7" />
-<img width="1920" height="1020" alt="Screenshot 2026-05-03 225634" src="https://github.com/user-attachments/assets/64c482f8-eaa0-47be-b799-46028e264585" />
-<img width="1920" height="1020" alt="Screenshot 2026-05-03 225813" src="https://github.com/user-attachments/assets/1080ca97-2e4c-4c89-b00f-4c6ce2024a02" />
-<img width="1920" height="1020" alt="Screenshot 2026-05-04 160452" src="https://github.com/user-attachments/assets/5c10baa8-6739-4906-b297-41d0a7b5bb4e" />
-<img width="1920" height="1020" alt="Screenshot 2026-05-04 221037" src="https://github.com/user-attachments/assets/9278afd7-bd6f-4e86-af55-5870315e499d" />
-<img width="1920" height="1020" alt="Screenshot 2026-05-06 210058" src="https://github.com/user-attachments/assets/5bd23274-2ea3-411e-acaf-af97d4c6ed5b" />
-<img width="1920" height="1020" alt="Screenshot 2026-05-06 210133" src="https://github.com/user-attachments/assets/825c0c8f-aedd-43c4-8a19-d1b2479ee065" />
-<img width="1920" height="1020" alt="Screenshot 2026-05-06 210220" src="https://github.com/user-attachments/assets/620aa4f1-0784-496c-aee9-baeb5f00b684" />
+<img width="1920" height="1020" alt="Screenshot 2026-05-06 210058" src="https://github.com/user-attachments/assets/e4f44ff0-57fd-4bf5-9345-69a4443e5b91" />
+<img width="1920" height="1020" alt="Screenshot 2026-05-06 210133" src="https://github.com/user-attachments/assets/64612891-1cf6-42e2-adf7-1b1ea29aabf3" />
+<img width="1920" height="1020" alt="Screenshot 2026-05-06 210220" src="https://github.com/user-attachments/assets/05518d9a-c52a-4b9c-87be-4f2f248411ce" />
+<img width="1920" height="1020" alt="Screenshot 2026-05-03 225813" src="https://github.com/user-attachments/assets/613f9c77-dabe-4d45-9499-c3b8cbbdf3cd" />
+<img width="1920" height="1020" alt="Screenshot 2026-05-03 225634" src="https://github.com/user-attachments/assets/07afe7eb-1e9f-4d00-aee4-52f5fc8741be" />
+
+
+
+
 
 
 
